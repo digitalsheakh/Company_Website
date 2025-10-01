@@ -508,7 +508,7 @@ body {
 /* Service Grid */
 .service-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin: 32px 0;
 }
@@ -531,10 +531,6 @@ body {
 
 #home.active .service-grid button:nth-child(4) {
   animation-delay: 1.55s;
-}
-
-#home.active .service-grid button:nth-child(5) {
-  animation-delay: 1.6s;
 }
 
 .service-btn {
