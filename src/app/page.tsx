@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, FormEvent } from 'react';
+import { useState, useRef, FormEvent, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 
 export default function Home() {
@@ -15,6 +15,11 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const formRef = useRef<HTMLFormElement>(null);
+
+  // Initialize EmailJS
+  useEffect(() => {
+    emailjs.init('_5VLmkhbpDyqVK5Qn');
+  }, []);
 
   const showPage = (pageId: string) => {
     setActivePage(pageId);
@@ -42,26 +47,41 @@ export default function Home() {
     try {
       // EmailJS credentials
       const serviceId = 'service_w4y5j3f';
-      const templateId = 'template_gujx0yj'; // Replace with your feedback template ID
-      const publicKey = '_5VLmkhbpDyqVK5Qn';
+      const templateId = 'template_gujx0yj';
+      const autoReplyTemplateId = 'template_gpqqy6n';
 
-      const templateParams = {
+      console.log('Attempting to send email with:', {
+        serviceId,
+        templateId,
+        name: formData.name,
+        email: formData.email
+      });
+
+      // Parameters for team notification (Feedback Request template)
+      const teamParams = {
         from_name: formData.name,
         from_email: formData.email,
+        email: 'digitalsheakh@gmail.com', // To Email field in template
         company: formData.company || 'Not provided',
         phone: formData.phone || 'Not provided',
         services: formData.services.join(', ') || 'Not specified',
-        to_name: 'Sheakh Digital Team',
       };
 
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      // Send notification to your team
+      console.log('Sending team notification...');
+      const response1 = await emailjs.send(serviceId, templateId, teamParams);
+      console.log('Team notification sent:', response1);
       
-      // Send auto-reply
-      const autoReplyTemplateId = 'template_gpqqy6n'; // Replace with your auto-reply template ID
-      await emailjs.send(serviceId, autoReplyTemplateId, {
+      // Parameters for auto-reply (Auto-Reply template)
+      const autoReplyParams = {
         to_name: formData.name,
-        to_email: formData.email,
-      }, publicKey);
+        email: formData.email, // To Email field in template
+      };
+      
+      // Send auto-reply to customer
+      console.log('Sending auto-reply...');
+      const response2 = await emailjs.send(serviceId, autoReplyTemplateId, autoReplyParams);
+      console.log('Auto-reply sent:', response2);
 
       setSubmitStatus('success');
       setFormData({ name: '', company: '', email: '', phone: '', services: [] });
@@ -69,8 +89,14 @@ export default function Home() {
       setTimeout(() => {
         setSubmitStatus('idle');
       }, 5000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending email:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        text: error?.text,
+        status: error?.status,
+        full: JSON.stringify(error)
+      });
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
