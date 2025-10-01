@@ -2,8 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sheakh Digital - Professional Website Development, App Development, Digital Marketing & SEO Services",
-  description: "Sheakh Digital (sheakh.digital) - Expert IT solutions including custom website development, mobile app development, digital marketing (Google Ads, Meta Ads, TikTok Ads), SEO services, email marketing, and content creation. Transform your business with affordable monthly plans starting at £29. Available worldwide.",
+  title: "Sheakh Digital - Transforming Ideas into Digital Success",
+  description: "Professional IT solutions for modern businesses. We specialize in website development, mobile apps, digital marketing, and SEO. Affordable plans from £29/month. Let's bring your vision to life.",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   keywords: [
     "Sheakh Digital",
     "sheakh.digital",
@@ -62,21 +72,21 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://sheakh.digital",
     siteName: "Sheakh Digital",
-    title: "Sheakh Digital - Professional Website Development, App Development & Digital Marketing Services",
-    description: "Transform your business with Sheakh Digital's expert IT solutions. Website development from £29/month, mobile apps, digital marketing (Google Ads, Meta Ads, TikTok Ads), SEO, and more. Serving clients worldwide.",
+    title: "Sheakh Digital - Transforming Ideas into Digital Success",
+    description: "Professional IT solutions for modern businesses. Website development, mobile apps, digital marketing & SEO. Affordable plans from £29/month. Let's bring your vision to life.",
     images: [
       {
         url: "https://sheakh.digital/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Sheakh Digital - IT Solutions & Digital Marketing",
+        alt: "Sheakh Digital - Transforming Ideas into Digital Success",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sheakh Digital - Website Development, Apps & Digital Marketing",
-    description: "Expert IT solutions including website development, mobile apps, digital marketing, and SEO services. Affordable monthly plans available.",
+    title: "Sheakh Digital - Transforming Ideas into Digital Success",
+    description: "Professional IT solutions for modern businesses. Website development, mobile apps, digital marketing & SEO. Affordable plans from £29/month.",
     images: ["https://sheakh.digital/twitter-image.jpg"],
     creator: "@digitalsheakh",
   },
