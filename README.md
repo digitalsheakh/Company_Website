@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Digital Sheakh - Professional Digital Services Portfolio
 
-## Getting Started
+Welcome to **Digital Sheakh** (sheakh.digital) - Your trusted partner in digital transformation!
 
-First, run the development server:
+## 🚀 About Digital Sheakh
+
+Digital Sheakh is a full-service digital agency specializing in:
+
+- **Website Development** - Modern, responsive websites built with cutting-edge technology
+- **App Development** - Native and cross-platform mobile applications
+- **Digital Marketing** - Google Ads, Meta Ads, TikTok Ads, TripAdvisor marketing
+- **SEO & Email Marketing** - Organic growth strategies that deliver results
+- **Content Creation** - High-quality content that engages and converts
+
+## 🛠️ Technology Stack
+
+This website is built with:
+- **Next.js 15** - React framework for production
+- **TypeScript** - Type-safe development
+- **Tailwind CSS 4** - Modern utility-first CSS framework
+- **React 19** - Latest React features
+
+## 📦 Getting Started
+
+### Installation
+
+```bash
+npm install
+```
+
+### Development Server
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the website.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## 🎨 Features
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ Fully responsive design (mobile, tablet, desktop)
+- ✅ Smooth page transitions and animations
+- ✅ SEO optimized with proper meta tags
+- ✅ Modern gradient sidebar design
+- ✅ Interactive service navigation
+- ✅ Contact forms and CTAs
+- ✅ Social media integration
+- ✅ Fast loading and performance optimized
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📄 Pages
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Home** - Main landing page with service overview
+- **Website Development** - Web development services
+- **App Development** - Mobile app development services
+- **Digital Marketing** - Comprehensive marketing solutions
+- **Content Creation** - Content and creative services
+- **Contact** - Get in touch with Digital Sheakh
 
-## Deploy on Vercel
+## 🌐 Domain
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This website is designed for: **sheakh.digital**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📧 Contact
+
+- Email: contact@sheakh.digital
+- Website: www.sheakh.digital
+
+## 📝 License
+
+© 2025 Digital Sheakh. All rights reserved.
+
+---
+
+Built with ❤️ by Digital Sheakh
