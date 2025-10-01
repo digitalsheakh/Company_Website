@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sheakh Digital - Transforming Ideas into Digital Success",
-  description: "Professional IT solutions for modern businesses. We specialize in website development, mobile apps, digital marketing, and SEO. Affordable plans from £29/month. Let's bring your vision to life.",
+  title: "Sheakh Digital - IT solutions for Your Business",
+  description: "Development, Design, Digital Marketing, SEO, Content Creation with Digital Sheakh with affordable plans",
   icons: {
     icon: [
       { url: '/favicon.ico' },
