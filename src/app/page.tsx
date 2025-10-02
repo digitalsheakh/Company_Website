@@ -251,7 +251,7 @@ export default function Home() {
               </div>
               <div className="contact-item">
                 <span className="contact-dot">•</span>
-                <span>Available for projects worldwide</span>
+                <span>Moulvibazar, Bangladesh, 3200</span>
               </div>
             </div>
 
