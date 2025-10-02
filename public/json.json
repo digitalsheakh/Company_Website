@@ -1,0 +1,25 @@
+{
+  "sources": [
+    {
+      "catrgories": "Politics",
+      "name": "CNN",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/6/69/CNN.svg",
+      "url": "http://rss.cnn.com/rss/cnn_topstories.rss"
+    },
+    {
+      "name": "The New York Times",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/7/77/The_New_York_Times_logo.png",
+      "url": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+    },
+    {
+      "name": "BBC News",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/e/eb/BBC_News_2022.svg",
+      "url": "http://feeds.bbci.co.uk/news/rss.xml"
+    },
+    {
+      "name": "Reuters",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Reuters_Logo.svg",
+      "url": "http://feeds.reuters.com/reuters/topNews"
+    }
+  ]
+}

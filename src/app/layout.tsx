@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sheakh Digital - Professional Website Development, App Development & Digital Marketing Services",
+  title: "Digital Sheakh - Professional Website Development, App Development & Digital Marketing Services",
   description: "Expert IT solutions including custom website development, mobile app development, digital marketing (Google Ads, Meta Ads, TikTok Ads), SEO services, email marketing, and content creation. Transform your business with affordable monthly plans.",
   icons: {
     icon: [
@@ -50,12 +50,10 @@ export const metadata: Metadata = {
     "web design agency",
     "digital agency",
     "Moulvibazar digital services",
-    "Sylhet web development",
-    "Bangladesh IT services",
   ].join(", "),
-  authors: [{ name: "Sheakh Digital" }],
-  creator: "Sheakh Digital",
-  publisher: "Sheakh Digital",
+  authors: [{ name: "Digital Sheakh" }],
+  creator: "Digital Sheakh",
+  publisher: "Digital Sheakh",
   robots: {
     index: true,
     follow: true,

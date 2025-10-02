@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 155 55% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 155 55% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 155 55% 15%;
+
+    --primary: 155 78% 28%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 45 95% 62%;
+    --secondary-foreground: 155 55% 15%;
+
+    --accent: 10 85% 75%;
+    --accent-foreground: 155 55% 15%;
+
+    --muted: 155 12% 95%;
+    --muted-foreground: 155 25% 55%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 155 20% 88%;
+    --input: 155 20% 92%;
+    --ring: 155 78% 28%;
+
+    /* Brand colors */
+    --brand-green: 155 78% 28%;
+    --brand-green-light: 155 45% 85%;
+    --brand-yellow: 45 95% 62%;
+    --brand-coral: 10 85% 75%;
+    
+    /* Design system tokens */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--brand-green)), hsl(155 70% 35%));
+    --gradient-accent: linear-gradient(90deg, hsl(var(--brand-yellow)), hsl(var(--brand-coral)));
+    --shadow-soft: 0 4px 20px hsl(var(--brand-green) / 0.1);
+    --shadow-elevated: 0 10px 40px hsl(var(--brand-green) / 0.15);
+
+    --radius: 0.5rem;
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --animation-duration: 0.6s;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 155 25% 8%;
+    --foreground: 155 15% 92%;
+
+    --card: 155 25% 10%;
+    --card-foreground: 155 15% 92%;
+
+    --popover: 155 25% 10%;
+    --popover-foreground: 155 15% 92%;
+
+    --primary: 155 65% 55%;
+    --primary-foreground: 155 25% 8%;
+
+    --secondary: 45 85% 55%;
+    --secondary-foreground: 155 25% 8%;
+
+    --accent: 10 75% 65%;
+    --accent-foreground: 155 25% 8%;
+
+    --muted: 155 25% 15%;
+    --muted-foreground: 155 15% 65%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 155 25% 20%;
+    --input: 155 25% 18%;
+    --ring: 155 65% 55%;
+
+    /* Dark mode brand colors */
+    --brand-green: 155 65% 55%;
+    --brand-green-light: 155 35% 25%;
+    --brand-yellow: 45 85% 55%;
+    --brand-coral: 10 75% 65%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

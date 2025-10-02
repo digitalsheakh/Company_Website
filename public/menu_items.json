@@ -1,0 +1,190 @@
+[
+    {
+        "name": "BALTI CHICKEN OR LAMB TIKKA MASSALA",
+        "price": 7.75
+    },
+    {
+        "name": "BALTI CHICKEN OR LAMB",
+        "price": 7.75
+    },
+    {
+        "name": "BALTI KING PRAWNS",
+        "price": 12.95
+    },
+    {
+        "name": "BALTI HARI MIRCHI",
+        "price": 7.75
+    },
+    {
+        "name": "BALTI MONCHURIAN",
+        "price": 7.75
+    },
+    {
+        "name": "BALTI ROJOTI",
+        "price": 7.75
+    },
+    {
+        "name": "BALTI MIXED VEGETABLE V",
+        "price": 6.95
+    },
+    {
+        "name": "NON VEGETABLE THALI",
+        "price": 11.75
+    },
+    {
+        "name": "VEGETABLE THALI V",
+        "price": 10.5
+    },
+    {
+        "name": "VEGETABLE TRAY",
+        "price": 9.75
+    },
+    {
+        "name": "CAULIFLOWER BHAJEE",
+        "price": 4.25
+    },
+    {
+        "name": "MUSHROOM BHAJEE",
+        "price": 4.25
+    },
+    {
+        "name": "VEGETABLE CURRY",
+        "price": 4.25
+    },
+    {
+        "name": "ALOO GOBI",
+        "price": 4.25
+    },
+    {
+        "name": "BHINDI OR BRINGAL BHAJEE",
+        "price": 4.25
+    },
+    {
+        "name": "NIRAMISH",
+        "price": 4.25
+    },
+    {
+        "name": "BOMBAY ALOO",
+        "price": 4.25
+    },
+    {
+        "name": "SAG BHAJEE",
+        "price": 4.25
+    },
+    {
+        "name": "SAG ALOO",
+        "price": 4.25
+    },
+    {
+        "name": "TARKA DAL",
+        "price": 4.25
+    },
+    {
+        "name": "VEGETABLE SAMBER",
+        "price": 4.25
+    },
+    {
+        "name": "SAG PANEER",
+        "price": 4.25
+    },
+    {
+        "name": "MOTOR PANEER",
+        "price": 4.25
+    },
+    {
+        "name": "ALOO PANEER",
+        "price": 4.25
+    },
+    {
+        "name": "CHANA BHOONA",
+        "price": 4.25
+    },
+    {
+        "name": "PLAIN RICE",
+        "price": 2.75
+    },
+    {
+        "name": "PULAO RICE",
+        "price": 2.85
+    },
+    {
+        "name": "GARLIC RICE V",
+        "price": 3.25
+    },
+    {
+        "name": "SPECIAL FRIED RICE",
+        "price": 3.25
+    },
+    {
+        "name": "VEGETABLE PULAO RICE V",
+        "price": 3.25
+    },
+    {
+        "name": "MUSHROOM PULAO RICE V",
+        "price": 3.25
+    },
+    {
+        "name": "CHANA RICE V",
+        "price": 3.25
+    },
+    {
+        "name": "AKHNI RICE",
+        "price": 3.5
+    },
+    {
+        "name": "NAN",
+        "price": 2.35
+    },
+    {
+        "name": "PESHWARI NAN",
+        "price": 2.95
+    },
+    {
+        "name": "STUFFED NAN V",
+        "price": 2.95
+    },
+    {
+        "name": "KEEMA NAN",
+        "price": 2.95
+    },
+    {
+        "name": "GARLIC NAN V",
+        "price": 2.95
+    },
+    {
+        "name": "GARLIC CHILLI NAN V",
+        "price": 2.95
+    },
+    {
+        "name": "HOLLY EMMA NAN",
+        "price": 3.25
+    },
+    {
+        "name": "PARATHA",
+        "price": 2.95
+    },
+    {
+        "name": "CHAPATI",
+        "price": 1.75
+    },
+    {
+        "name": "PLAIN PAPADAM",
+        "price": 0.8
+    },
+    {
+        "name": "SPICED PAPADAM",
+        "price": 0.8
+    },
+    {
+        "name": "CHUTNEY",
+        "price": 0.6
+    },
+    {
+        "name": "CHICKEN (English Dish)",
+        "price": 7.95
+    },
+    {
+        "name": "SIRLOIN STEAK",
+        "price": 10.95
+    }
+]

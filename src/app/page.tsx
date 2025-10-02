@@ -21,6 +21,23 @@ export default function Home() {
     emailjs.init('_5VLmkhbpDyqVK5Qn');
   }, []);
 
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.page) {
+        setActivePage(event.state.page);
+      } else {
+        setActivePage('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   const showPage = (pageId: string) => {
     setActivePage(pageId);
     if (pageId !== 'home') {
@@ -139,20 +156,20 @@ export default function Home() {
             <div className="section">
               <h3 className="section-title">Who are we?</h3>
               <p className="section-text">
-                We are Digital Sheakh, your trusted partner in digital transformation. We specialize in creating cutting-edge websites, mobile applications, and comprehensive digital marketing solutions that drive real results for businesses worldwide.
+                We are Digital Sheakh. We make websites and apps also help you market them, through search engine optimisation, Google Ads, Meta Ads, and email campaigns.
               </p>
             </div>
 
             <div className="section">
-              <h3 className="section-title">What makes us different?</h3>
+              <h3 className="section-title">Where are we?</h3>
               <p className="section-text">
-                At sheakh.digital, we combine creativity with technology to deliver exceptional digital experiences. Our team of experts is dedicated to helping your business thrive in the digital landscape through innovative solutions and data-driven strategies.
+                Our office is in Moulvibazar, Bangladesh. Ideally placed to support businesses worldwide. We have a team of IT professionals and marketing experts located globally to help you with your business needs.
               </p>
             </div>
 
             <div className="section">
-              <h3 className="section-title">Ready to get started?</h3>
-              <p className="section-text">Let&apos;s bring your vision to life:</p>
+              <h3 className="section-title">Already know what you want?</h3>
+              <p className="section-text">Need to get moving quickly? That&apos;s fine by us, go for it:</p>
               
               <div className="cta-buttons">
                 <a href="#contact" className="btn btn-primary" onClick={(e) => { e.preventDefault(); showPage('contact'); }}>
@@ -214,7 +231,7 @@ export default function Home() {
             <div className="section">
               <h3 className="section-title">Our Products</h3>
               <p className="section-text">
-                Check out <a href="#our-products" onClick={(e) => { e.preventDefault(); showPage('our-products'); }} style={{ color: '#2d667c', textDecoration: 'none', fontWeight: '600', borderBottom: '1px solid #2d667c' }}>Table for Four</a> - our restaurant table management solution, and explore more innovative products we&apos;ve built.
+                Beyond building solutions for businesses, we also create innovative consumer apps. Check out <a href="#consumer-apps" onClick={(e) => { e.preventDefault(); showPage('consumer-apps'); }} style={{ color: '#2d667c', textDecoration: 'none', fontWeight: '600', borderBottom: '1px solid #2d667c' }}>our mobile apps</a> available on the App Store, or visit <a href="https://www.tableforfour.co" target="_blank" rel="noopener noreferrer" style={{ color: '#2d667c', textDecoration: 'none', fontWeight: '600', borderBottom: '1px solid #2d667c' }}>Table for Four</a> - our restaurant management system.
               </p>
             </div>
 
@@ -274,49 +291,44 @@ export default function Home() {
             
             <div className="page-body">
               <p className="page-description">
-                Professional web development services for businesses of all sizes. From stunning landing pages to complex web applications, we build websites that convert visitors into customers.
+                Modern web development services for businesses of all sizes. Perfect landing pages to complex web applications, we build websites that convert visitors into customers.
               </p>
               
               <ul className="feature-list">
-                <li><span className="feature-dot">•</span> Responsive design that works perfectly on all devices</li>
-                <li><span className="feature-dot">•</span> Modern, fast-loading websites with cutting-edge technology</li>
-                <li><span className="feature-dot">•</span> E-commerce solutions with secure payment integration</li>
-                <li><span className="feature-dot">•</span> Custom CMS and content management systems</li>
-                <li><span className="feature-dot">•</span> SEO-optimized structure for better search rankings</li>
-                <li><span className="feature-dot">•</span> Ongoing maintenance and support</li>
+                <li><span className="feature-dot"></span> Responsive design that works perfectly on all devices</li>
+                <li><span className="feature-dot"></span> Modern, fast-loading websites with cutting-edge technology</li>
+                <li><span className="feature-dot"></span> Custom CMS and content management systems</li>
+                <li><span className="feature-dot"></span> SEO optimized structure for better search rankings</li>
+                <li><span className="feature-dot"></span> Ongoing maintenance and support</li>
+                <li><span className="feature-dot"></span> Shop, restaurant, and service websites</li>
               </ul>
               
               <p className="award-text">
-                We use the latest technologies including React, Next.js, Node.js, and more to build scalable, high-performance websites.
+                We use the latest technologies to build high-performance websites.
               </p>
               
               <p className="projects-intro">Technologies we work with:</p>
               <ul className="projects-list">
                 <li><span className="project-dot">○</span> <em>React & Next.js</em></li>
-                <li><span className="project-dot">○</span> <em>WordPress & Custom CMS</em></li>
-                <li><span className="project-dot">○</span> <em>Shopify & WooCommerce</em></li>
+                <li><span className="project-dot">○</span> <em>WordPress & Webflow & wix & framer </em></li>
+                <li><span className="project-dot">○</span> <em>Shopify</em></li>
                 <li><span className="project-dot">○</span> <em>Node.js & Python Backend</em></li>
               </ul>
               
               <p className="pricing">
-                Prices start at just £29 per month, with nothing up front.
-                <span className="pricing-highlight">Affordable monthly payments make professional websites accessible to all businesses.</span>
+                Prices start at just $29 per month, with nothing up front.
+                <span className="pricing-highlight">If you have your concept ready we will design, develop and deploy it for you!!</span>
               </p>
               
               <div className="cta-buttons">
                 <a href="#contact" className="btn btn-primary" onClick={(e) => { e.preventDefault(); showPage('contact'); }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px' }}>
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                    <polyline points="14,2 14,8 20,8"/>
-                  </svg>
+                  
+                  
                   Get a Free Quote
                 </a>
                 <a href="mailto:digitalsheakh@gmail.com" className="btn btn-primary">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px' }}>
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                  </svg>
-                  Email Us
+                  
+                 Email Us
                 </a>
               </div>
             </div>
@@ -336,40 +348,35 @@ export default function Home() {
             
             <div className="page-body">
               <p className="page-description">
-                Native and cross-platform mobile applications that deliver exceptional user experiences. We build iOS and Android apps that your customers will love.
+                We develop Native and cross-platform mobile applications that solve problems and help you grow.
               </p>
               
               <ul className="feature-list">
-                <li><span className="feature-dot">•</span> iOS and Android native app development</li>
-                <li><span className="feature-dot">•</span> Cross-platform apps with React Native & Flutter</li>
-                <li><span className="feature-dot">•</span> Progressive Web Apps (PWA)</li>
-                <li><span className="feature-dot">•</span> App Store optimization and deployment</li>
-                <li><span className="feature-dot">•</span> Backend API development and integration</li>
-                <li><span className="feature-dot">•</span> Push notifications and real-time features</li>
-                <li><span className="feature-dot">•</span> App maintenance and updates</li>
+                <li><span className="feature-dot"></span> iOS and Android native app development</li>
+                <li><span className="feature-dot"></span> Cross-platform apps with React Native</li>
+                <li><span className="feature-dot"></span> Progressive Web Apps</li>
+                <li><span className="feature-dot"></span> App Store optimization and deployment</li>
+                <li><span className="feature-dot"></span> Backend API development and integration and admin panel</li>
+                
+                <li><span className="feature-dot"></span> App maintenance and updates</li>
               </ul>
               
               <p className="page-text">
-                Our mobile development team has years of experience creating apps for startups and enterprises. We follow best practices to ensure your app is secure, scalable, and performs flawlessly.
+                Our mobile development team has years of experience creating apps for our clients. We follow best practices to ensure your app is ready to scale and innovative.
               </p>
               
               <p className="pricing">
-                Custom app development with flexible pricing.
-                <span className="pricing-highlight">Get a personalized quote based on your app requirements and features.</span>
+                Perfect app development with flexible pricing.
+                <span className="pricing-highlight">We develop and maintain apps with affordable montly price with nothing upfront. So do not worry about maintenance and updates.</span>
               </p>
               
               <div className="cta-buttons">
                 <a href="#contact" className="btn btn-primary" onClick={(e) => { e.preventDefault(); showPage('contact'); }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px' }}>
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                  </svg>
+                  
                   Get a Free Quote
                 </a>
                 <a href="mailto:digitalsheakh@gmail.com" className="btn btn-primary">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px' }}>
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                  </svg>
+                  
                   Email Us
                 </a>
               </div>
@@ -390,46 +397,41 @@ export default function Home() {
             
             <div className="page-body">
               <p className="page-description">
-                Comprehensive digital marketing services to grow your online presence and drive real business results through paid advertising campaigns.
+                Smart digital marketing services to grow your business and get real customers through advertising campaigns and social media marketing.
               </p>
               
               <ul className="feature-list">
-                <li><span className="feature-dot">•</span> <strong>Google Ads</strong> - Search, Display, and Shopping campaigns</li>
-                <li><span className="feature-dot">•</span> <strong>Meta Ads</strong> - Facebook and Instagram advertising</li>
+                <li><span className="feature-dot"></span> <strong>Google Ads</strong> - Search, Display, and Shopping campaigns</li>
+                <li><span className="feature-dot"></span> <strong>Meta Ads</strong> - Facebook and Instagram advertising</li>
                 <li><span className="feature-dot">•</span> <strong>TikTok Ads</strong> - Reach younger audiences with viral content</li>
                 <li><span className="feature-dot">•</span> <strong>TripAdvisor Marketing</strong> - Perfect for hospitality businesses</li>
                 <li><span className="feature-dot">•</span> <strong>Email Marketing</strong> - Automated campaigns that convert</li>
-                <li><span className="feature-dot">•</span> <strong>Social Media Management</strong> - Build your brand presence</li>
-                <li><span className="feature-dot">•</span> <strong>Content Creation</strong> - Copywriting, blogs, and social media content</li>
+                <li><span className="feature-dot">•</span> <strong>Social Media Management</strong> - Build your brand online</li>
+                <li><span className="feature-dot">•</span> <strong>Content Creation</strong> - Blogs writing</li>
                 <li><span className="feature-dot">•</span> <strong>Video Production</strong> - Professional promotional videos</li>
-                <li><span className="feature-dot">•</span> <strong>Graphic Design</strong> - Logos, banners, and brand materials</li>
+                <li><span className="feature-dot">•</span> <strong>Graphic Design</strong> - Logos, banners, and posters</li>
               </ul>
               
               <p className="award-text">
-                We are certified Google Partners and Meta Business Partners, ensuring you get expert campaign management and the best possible ROI.
+                We are professionals with years of experience in digital marketing and we are here to help you grow your business.
               </p>
               
               <p className="page-text">
-                Our data-driven approach means every marketing dollar is tracked and optimized for maximum return. We provide detailed monthly reports showing exactly how your campaigns are performing.
+                Our data driven strategy means every marketing spend is tracked and optimized for maximum return. We provide detailed monthly reports showing exactly how your campaigns are performing.
               </p>
               
               <p className="pricing">
-                Starting from £299 per month.
-                <span className="pricing-highlight">Nothing upfront - flexible monthly plans to suit your budget.</span>
+                Starting from $199 per month.
+                <span className="pricing-highlight">Nothing upfront and flexible monthly plans to suit your budget.</span>
               </p>
               
               <div className="cta-buttons">
                 <a href="#contact" className="btn btn-primary" onClick={(e) => { e.preventDefault(); showPage('contact'); }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px' }}>
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                  </svg>
+                  
                   Get a Free Quote
                 </a>
                 <a href="mailto:digitalsheakh@gmail.com" className="btn btn-primary">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px' }}>
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                  </svg>
+                  
                   Email Us
                 </a>
               </div>
@@ -450,45 +452,40 @@ export default function Home() {
             
             <div className="page-body">
               <p className="page-description">
-                Professional SEO services to improve your search engine rankings and drive organic traffic to your website. Get found by customers who are actively searching for your services.
+                Professional SEO services to take your business on the top of search the search results. Get found by customers who are actively searching for your services.
               </p>
               
               <ul className="feature-list">
-                <li><span className="feature-dot">•</span> <strong>Keyword Research</strong> - Find the right keywords to target your audience</li>
-                <li><span className="feature-dot">•</span> <strong>On-Page SEO</strong> - Optimize your website content and structure</li>
-                <li><span className="feature-dot">•</span> <strong>Technical SEO</strong> - Improve site speed, mobile-friendliness, and crawlability</li>
-                <li><span className="feature-dot">•</span> <strong>Content Strategy</strong> - Create SEO-optimized content that ranks</li>
-                <li><span className="feature-dot">•</span> <strong>Link Building</strong> - Build high-quality backlinks to boost authority</li>
-                <li><span className="feature-dot">•</span> <strong>Local SEO</strong> - Dominate local search results in your area</li>
-                <li><span className="feature-dot">•</span> <strong>Analytics & Reporting</strong> - Track your rankings and traffic growth</li>
-                <li><span className="feature-dot">•</span> <strong>Competitor Analysis</strong> - Stay ahead of your competition</li>
+                <li><span className="feature-dot"></span> <strong>Keyword Research</strong> - Find the right keywords to target your audience</li>
+                <li><span className="feature-dot"></span> <strong>On Page SEO</strong> - Optimize your website content and structure</li>
+                <li><span className="feature-dot"></span> <strong>Technical SEO</strong> - Improve site speed, mobile-friendliness, and crawlability</li>
+                <li><span className="feature-dot"></span> <strong>Content Strategy</strong> - Create SEO-optimized content that ranks</li>
+                <li><span className="feature-dot"></span> <strong>Link Building</strong> - Build high quality backlinks to boost authority</li>
+                <li><span className="feature-dot"></span> <strong>Local SEO</strong> - Dominate local search results in your area</li>
+                <li><span className="feature-dot"></span> <strong>Analytics & Reporting</strong> - Track your rankings and traffic growth</li>
+                <li><span className="feature-dot"></span> <strong>Competitor Analysis</strong> - Stay ahead of every competitor</li>
               </ul>
               
               <p className="award-text">
-                Our SEO strategies deliver long-term, sustainable growth. We focus on white-hat techniques that comply with Google&apos;s guidelines.
+                Our SEO strategies deliver long term, sustainable growth.
               </p>
               
               <p className="page-text">
-                SEO is a long-term investment that pays dividends. Unlike paid advertising, organic rankings continue to drive traffic without ongoing ad spend. We provide monthly reports showing your progress and ROI.
+                SEO is a long term investment that pays dividends. Unlike paid advertising, organic rankings continue to drive traffic without ongoing ad spend. We provide monthly reports showing your progress and ROI.
               </p>
               
               <p className="pricing">
-                Starting from £100 per month.
+                Starting from $99 per month.
                 <span className="pricing-highlight">Nothing upfront - see results within 3-6 months.</span>
               </p>
               
               <div className="cta-buttons">
                 <a href="#contact" className="btn btn-primary" onClick={(e) => { e.preventDefault(); showPage('contact'); }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px' }}>
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                  </svg>
+                  
                   Get a Free Quote
                 </a>
                 <a href="mailto:digitalsheakh@gmail.com" className="btn btn-primary">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px' }}>
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                  </svg>
+                  
                   Email Us
                 </a>
               </div>
@@ -496,7 +493,148 @@ export default function Home() {
             
             <div className="page-navigation">
               <a className="nav-arrow" onClick={() => showPage('digital-marketing')}>← Digital Marketing</a>
-              <a className="nav-arrow" onClick={() => showPage('our-products')}>Our Products →</a>
+              <a className="nav-arrow" onClick={() => showPage('consumer-apps')}>Consumer Apps →</a>
+            </div>
+          </div>
+
+          {/* Consumer Apps Page */}
+          <div id="consumer-apps" className={`page-content ${activePage === 'consumer-apps' ? 'active' : ''}`}>
+            <div className="page-header">
+              <h1 className="page-title">Our Consumer Products</h1>
+              <button className="close-btn" onClick={() => showPage('home')}>✕</button>
+            </div>
+            
+            <div className="page-body">
+              <p className="page-description">
+                We do not just build for businesses, we create daily life consumer sotware that solve real world problems. Check out our apps available on the App Store.
+              </p>
+              
+              {/* App 1: I Am Muslim */}
+              <div className="section" style={{ marginBottom: '48px', paddingBottom: '32px', borderBottom: '1px solid #e0e0e0' }}>
+                <h3 className="section-title" style={{ fontSize: '22px', color: '#2d667c', marginBottom: '20px' }}>
+                  I Am Muslim - My Prayer Times
+                </h3>
+                
+                <div style={{ marginBottom: '24px', display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  <div style={{ flex: '1', minWidth: '250px', maxWidth: '350px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f8f9fa', padding: '20px', textAlign: 'center' }}>
+                    <img 
+                      src="/products/i-am-muslim/screenshot.png" 
+                      alt="I Am Muslim App Screenshot 1" 
+                      style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', maxHeight: '500px', objectFit: 'contain' }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                  <div style={{ flex: '1', minWidth: '250px', maxWidth: '350px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f8f9fa', padding: '20px', textAlign: 'center' }}>
+                    <img 
+                      src="/products/i-am-muslim/screenshot2.png" 
+                      alt="I Am Muslim App Screenshot 2" 
+                      style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', maxHeight: '500px', objectFit: 'contain' }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                <p className="page-text" style={{ marginBottom: '16px' }}>
+                  Available on the App Store with thousands of downloads worldwide.
+                </p>
+                
+                <ul className="feature-list" style={{ marginBottom: '20px' }}>
+                  <li><span className="feature-dot"></span> Accurate prayer times based on your location</li>
+                  <li><span className="feature-dot"></span> Qibla direction finder with compass</li>
+                  <li><span className="feature-dot"></span> Beautiful Adhan (call to prayer) notifications</li>
+                  <li><span className="feature-dot"></span> Read and listen to Quran</li>
+                  <li><span className="feature-dot"></span> Daily Islamic reminders and quotes</li>
+                  <li><span className="feature-dot"></span> Live Makkah Stream</li>
+                </ul>
+                
+                <a 
+                  href="https://apps.apple.com/gb/app/i-am-muslim-my-prayer-times/id6741376864" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn btn-primary"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  </svg>
+                  Download on App Store
+                </a>
+              </div>
+
+              {/* App 2: UK eVisa Guide */}
+              <div className="section" style={{ marginBottom: '48px' }}>
+                <h3 className="section-title" style={{ fontSize: '22px', color: '#2d667c', marginBottom: '20px' }}>
+                  UK eVisa Guide
+                </h3>
+                
+                <div style={{ marginBottom: '24px', display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  <div style={{ flex: '1', minWidth: '250px', maxWidth: '350px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f8f9fa', padding: '20px', textAlign: 'center' }}>
+                    <img 
+                      src="/products/uk-evisa-guide/screenshot.png" 
+                      alt="UK eVisa Guide App Screenshot 1" 
+                      style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', maxHeight: '500px', objectFit: 'contain' }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                  <div style={{ flex: '1', minWidth: '250px', maxWidth: '350px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f8f9fa', padding: '20px', textAlign: 'center' }}>
+                    <img 
+                      src="/products/uk-evisa-guide/screenshot2.png" 
+                      alt="UK eVisa Guide App Screenshot 2" 
+                      style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', maxHeight: '500px', objectFit: 'contain' }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                <p className="page-text" style={{ marginBottom: '16px' }}>
+                  Your complete guide for UK eVisa with step-by-step guidance.
+                </p>
+                
+                <ul className="feature-list" style={{ marginBottom: '20px' }}>
+                  <li><span className="feature-dot"></span> Comprehensive UK eVisa access guides</li>
+                  <li><span className="feature-dot"></span> Document Storage</li>
+                  <li><span className="feature-dot"></span> Step-by-step guide</li>
+                  <li><span className="feature-dot"></span> Latest updates and notifications</li>
+                  <li><span className="feature-dot"></span> Easy to use interface</li>
+                  <li><span className="feature-dot"></span> Expert tips and common mistakes to avoid</li>
+                </ul>
+                
+                <a 
+                  href="https://apps.apple.com/gb/app/uk-evisa-guide/id6743016719" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn btn-primary"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  </svg>
+                  Download on App Store
+                </a>
+              </div>
+
+              <div className="section">
+                <p className="page-text">
+                  Have an idea for an app? <a href="mailto:digitalsheakh@gmail.com" style={{ color: '#2d667c', textDecoration: 'none', fontWeight: '600', borderBottom: '1px solid #2d667c' }}>Get in touch</a> and let&apos;s discuss how we can build it together.
+                </p>
+              </div>
+            </div>
+            
+            <div className="page-navigation">
+              <a className="nav-arrow" onClick={() => showPage('seo')}>← SEO</a>
+              <a className="nav-arrow" onClick={() => showPage('our-products')}>Table for Four →</a>
             </div>
           </div>
 
@@ -534,7 +672,7 @@ export default function Home() {
                 </ul>
                 
                 <p className="pricing">
-                  Just £10 per month for restaurant owners.
+                  Just $13 per month for restaurant owners.
                   <span className="pricing-highlight">No setup fees, no hidden costs. Cancel anytime.</span>
                 </p>
                 
