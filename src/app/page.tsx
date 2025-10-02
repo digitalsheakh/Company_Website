@@ -89,12 +89,13 @@ export default function Home() {
       setTimeout(() => {
         setSubmitStatus('idle');
       }, 5000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending email:', error);
+      const errorObj = error as { message?: string; text?: string; status?: number };
       console.error('Error details:', {
-        message: error?.message,
-        text: error?.text,
-        status: error?.status,
+        message: errorObj?.message,
+        text: errorObj?.text,
+        status: errorObj?.status,
         full: JSON.stringify(error)
       });
       setSubmitStatus('error');
