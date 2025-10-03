@@ -15,11 +15,28 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const formRef = useRef<HTMLFormElement>(null);
+  
+  // Live Chat State
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isChatMinimized, setIsChatMinimized] = useState(false);
+  const [chatMessages, setChatMessages] = useState<Array<{text: string, sender: 'bot' | 'user'}>>([
+    { text: "Hi! What service are you interested in?", sender: 'bot' }
+  ]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatStep, setChatStep] = useState(0);
+  const [chatData, setChatData] = useState({ name: '', email: '', service: '', message: '' });
+  const [isTyping, setIsTyping] = useState(false);
+  const chatMessagesEndRef = useRef<HTMLDivElement>(null);
 
   // Initialize EmailJS
   useEffect(() => {
     emailjs.init('_5VLmkhbpDyqVK5Qn');
   }, []);
+
+  // Auto-scroll chat to bottom
+  useEffect(() => {
+    chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, isTyping]);
 
   // Handle browser back/forward buttons
   useEffect(() => {
@@ -119,6 +136,95 @@ export default function Home() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Handle Chat Messages
+  const handleChatSend = async () => {
+    if (!chatInput.trim()) return;
+
+    const userMessage = chatInput.trim().toLowerCase();
+    const originalMessage = chatInput.trim();
+    setChatMessages(prev => [...prev, { text: originalMessage, sender: 'user' }]);
+    setChatInput('');
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      let botResponse = '';
+      
+      if (chatStep === 0) {
+        // Check if user wants to change service or asking questions
+        if (userMessage.includes('change') || userMessage.includes('different') || userMessage.includes('another')) {
+          botResponse = `No problem! Which service would you like to know about?`;
+        } else {
+          // Service selection
+          setChatData(prev => ({ ...prev, service: originalMessage }));
+          botResponse = `Great choice! What's your name?`;
+          setChatStep(1);
+        }
+      } else if (chatStep === 1) {
+        // Check if user wants to go back or change service
+        if (userMessage.includes('back') || userMessage.includes('change service') || userMessage.includes('different service')) {
+          botResponse = `Sure! What service are you interested in?`;
+          setChatStep(0);
+          setChatData(prev => ({ ...prev, service: '' }));
+        } else {
+          // Name
+          setChatData(prev => ({ ...prev, name: originalMessage }));
+          botResponse = `Nice to meet you, ${originalMessage}! What's your email?`;
+          setChatStep(2);
+        }
+      } else if (chatStep === 2) {
+        // Check if user wants to go back
+        if (userMessage.includes('back') || userMessage.includes('change')) {
+          botResponse = `No problem! What's your name?`;
+          setChatStep(1);
+        } else {
+          // Email validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(originalMessage)) {
+            botResponse = `Please provide a valid email address.`;
+          } else {
+            setChatData(prev => ({ ...prev, email: originalMessage }));
+            botResponse = `Perfect! Tell us about your project requirements.`;
+            setChatStep(3);
+          }
+        }
+      } else if (chatStep === 3) {
+        // Check if user wants to go back
+        if (userMessage.includes('back') || userMessage.includes('change')) {
+          botResponse = `Sure! What's your email?`;
+          setChatStep(2);
+        } else {
+          // Message
+          setChatData(prev => ({ ...prev, message: originalMessage }));
+          botResponse = `Thank you! We'll get back to you within 24 hours. Check your email for confirmation.`;
+          setChatStep(4);
+          
+          // Send email via EmailJS
+          const chatFormData = {
+            ...chatData,
+            message: originalMessage
+          };
+          
+          emailjs.send('service_w4y5j3f', 'template_gujx0yj', {
+            from_name: chatFormData.name,
+            from_email: chatFormData.email,
+            email: 'digitalsheakh@gmail.com',
+            company: 'Chat Inquiry',
+            phone: 'N/A',
+            services: `${chatFormData.service} - ${chatFormData.message}`,
+          }).then(() => {
+            emailjs.send('service_w4y5j3f', 'template_gpqqy6n', {
+              to_name: chatFormData.name,
+              email: chatFormData.email,
+            });
+          });
+        }
+      }
+
+      setChatMessages(prev => [...prev, { text: botResponse, sender: 'bot' }]);
+    }, 600);
   };
 
   return (
@@ -231,7 +337,7 @@ export default function Home() {
             <div className="section">
               <h3 className="section-title">Our Products</h3>
               <p className="section-text">
-                Beyond building solutions for businesses, we also create innovative consumer apps. Check out <a href="#consumer-apps" onClick={(e) => { e.preventDefault(); showPage('consumer-apps'); }} style={{ color: '#2d667c', textDecoration: 'none', fontWeight: '600', borderBottom: '1px solid #2d667c' }}>our mobile apps</a> available on the App Store, or visit <a href="https://www.tableforfour.co" target="_blank" rel="noopener noreferrer" style={{ color: '#2d667c', textDecoration: 'none', fontWeight: '600', borderBottom: '1px solid #2d667c' }}>Table for Four</a> - our restaurant management system.
+                Check out <a href="https://www.tableforfour.co" target="_blank" rel="noopener noreferrer" style={{ color: '#2d667c', textDecoration: 'none', fontWeight: '600', borderBottom: '1px solid #2d667c' }}>Table for Four</a> - our restaurant management system designed for restaurant owners.
               </p>
             </div>
 
@@ -266,9 +372,9 @@ export default function Home() {
                   <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
                 </svg>
               </a>
-              <a href="#" className="social-icon" title="Twitter">
+              <a href="https://www.youtube.com/@digitalsheakh" target="_blank" rel="noopener noreferrer" className="social-icon" title="YouTube">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                 </svg>
               </a>
               <a href="#" className="social-icon" title="Facebook">
@@ -493,148 +599,7 @@ export default function Home() {
             
             <div className="page-navigation">
               <a className="nav-arrow" onClick={() => showPage('digital-marketing')}>← Digital Marketing</a>
-              <a className="nav-arrow" onClick={() => showPage('consumer-apps')}>Consumer Apps →</a>
-            </div>
-          </div>
-
-          {/* Consumer Apps Page */}
-          <div id="consumer-apps" className={`page-content ${activePage === 'consumer-apps' ? 'active' : ''}`}>
-            <div className="page-header">
-              <h1 className="page-title">Our Consumer Products</h1>
-              <button className="close-btn" onClick={() => showPage('home')}>✕</button>
-            </div>
-            
-            <div className="page-body">
-              <p className="page-description">
-                We do not just build for businesses, we create daily life consumer sotware that solve real world problems. Check out our apps available on the App Store.
-              </p>
-              
-              {/* App 1: I Am Muslim */}
-              <div className="section" style={{ marginBottom: '48px', paddingBottom: '32px', borderBottom: '1px solid #e0e0e0' }}>
-                <h3 className="section-title" style={{ fontSize: '22px', color: '#2d667c', marginBottom: '20px' }}>
-                  I Am Muslim - My Prayer Times
-                </h3>
-                
-                <div style={{ marginBottom: '24px', display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  <div style={{ flex: '1', minWidth: '250px', maxWidth: '350px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f8f9fa', padding: '20px', textAlign: 'center' }}>
-                    <img 
-                      src="/products/i-am-muslim/screenshot.png" 
-                      alt="I Am Muslim App Screenshot 1" 
-                      style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', maxHeight: '500px', objectFit: 'contain' }}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                  <div style={{ flex: '1', minWidth: '250px', maxWidth: '350px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f8f9fa', padding: '20px', textAlign: 'center' }}>
-                    <img 
-                      src="/products/i-am-muslim/screenshot2.png" 
-                      alt="I Am Muslim App Screenshot 2" 
-                      style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', maxHeight: '500px', objectFit: 'contain' }}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                </div>
-                
-                <p className="page-text" style={{ marginBottom: '16px' }}>
-                  Available on the App Store with thousands of downloads worldwide.
-                </p>
-                
-                <ul className="feature-list" style={{ marginBottom: '20px' }}>
-                  <li><span className="feature-dot"></span> Accurate prayer times based on your location</li>
-                  <li><span className="feature-dot"></span> Qibla direction finder with compass</li>
-                  <li><span className="feature-dot"></span> Beautiful Adhan (call to prayer) notifications</li>
-                  <li><span className="feature-dot"></span> Read and listen to Quran</li>
-                  <li><span className="feature-dot"></span> Daily Islamic reminders and quotes</li>
-                  <li><span className="feature-dot"></span> Live Makkah Stream</li>
-                </ul>
-                
-                <a 
-                  href="https://apps.apple.com/gb/app/i-am-muslim-my-prayer-times/id6741376864" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="btn btn-primary"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-                  </svg>
-                  Download on App Store
-                </a>
-              </div>
-
-              {/* App 2: UK eVisa Guide */}
-              <div className="section" style={{ marginBottom: '48px' }}>
-                <h3 className="section-title" style={{ fontSize: '22px', color: '#2d667c', marginBottom: '20px' }}>
-                  UK eVisa Guide
-                </h3>
-                
-                <div style={{ marginBottom: '24px', display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  <div style={{ flex: '1', minWidth: '250px', maxWidth: '350px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f8f9fa', padding: '20px', textAlign: 'center' }}>
-                    <img 
-                      src="/products/uk-evisa-guide/screenshot.png" 
-                      alt="UK eVisa Guide App Screenshot 1" 
-                      style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', maxHeight: '500px', objectFit: 'contain' }}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                  <div style={{ flex: '1', minWidth: '250px', maxWidth: '350px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#f8f9fa', padding: '20px', textAlign: 'center' }}>
-                    <img 
-                      src="/products/uk-evisa-guide/screenshot2.png" 
-                      alt="UK eVisa Guide App Screenshot 2" 
-                      style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', maxHeight: '500px', objectFit: 'contain' }}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                </div>
-                
-                <p className="page-text" style={{ marginBottom: '16px' }}>
-                  Your complete guide for UK eVisa with step-by-step guidance.
-                </p>
-                
-                <ul className="feature-list" style={{ marginBottom: '20px' }}>
-                  <li><span className="feature-dot"></span> Comprehensive UK eVisa access guides</li>
-                  <li><span className="feature-dot"></span> Document Storage</li>
-                  <li><span className="feature-dot"></span> Step-by-step guide</li>
-                  <li><span className="feature-dot"></span> Latest updates and notifications</li>
-                  <li><span className="feature-dot"></span> Easy to use interface</li>
-                  <li><span className="feature-dot"></span> Expert tips and common mistakes to avoid</li>
-                </ul>
-                
-                <a 
-                  href="https://apps.apple.com/gb/app/uk-evisa-guide/id6743016719" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="btn btn-primary"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-                  </svg>
-                  Download on App Store
-                </a>
-              </div>
-
-              <div className="section">
-                <p className="page-text">
-                  Have an idea for an app? <a href="mailto:digitalsheakh@gmail.com" style={{ color: '#2d667c', textDecoration: 'none', fontWeight: '600', borderBottom: '1px solid #2d667c' }}>Get in touch</a> and let&apos;s discuss how we can build it together.
-                </p>
-              </div>
-            </div>
-            
-            <div className="page-navigation">
-              <a className="nav-arrow" onClick={() => showPage('seo')}>← SEO</a>
-              <a className="nav-arrow" onClick={() => showPage('our-products')}>Table for Four →</a>
+              <a className="nav-arrow" onClick={() => showPage('our-products')}>Our Products →</a>
             </div>
           </div>
 
@@ -832,6 +797,327 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Live Chat Widget */}
+      <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000 }}>
+        {!isChatOpen ? (
+          <button
+            onClick={() => {
+              setIsChatOpen(true);
+              setIsChatMinimized(false);
+            }}
+            style={{
+              width: '55px',
+              height: '55px',
+              borderRadius: '50%',
+              backgroundColor: '#2d667c',
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px',
+              transition: 'all 0.2s',
+            }}
+            onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+            onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            💬
+          </button>
+        ) : isChatMinimized ? (
+          <div
+            onClick={() => setIsChatMinimized(false)}
+            style={{
+              backgroundColor: '#2d667c',
+              color: 'white',
+              padding: '12px 20px',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              fontSize: '14px',
+              fontWeight: '600',
+            }}
+          >
+            <span>💬</span>
+            <span>Digital Sheakh</span>
+          </div>
+        ) : (
+          <div style={{
+            width: '320px',
+            height: '450px',
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+          }}>
+            {/* Chat Header */}
+            <div style={{
+              backgroundColor: '#2d667c',
+              color: 'white',
+              padding: '14px 16px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+              <div style={{ fontWeight: '600', fontSize: '15px' }}>Digital Sheakh</div>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => setIsChatMinimized(true)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'white',
+                    fontSize: '18px',
+                    cursor: 'pointer',
+                    padding: '0',
+                  }}
+                  title="Minimize"
+                >
+                  −
+                </button>
+                <button
+                  onClick={() => {
+                    setIsChatOpen(false);
+                    setChatStep(0);
+                    setChatMessages([{ text: "Hi! What service are you interested in?", sender: 'bot' }]);
+                    setChatData({ name: '', email: '', service: '', message: '' });
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'white',
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                    padding: '0',
+                  }}
+                  title="Close"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Chat Messages */}
+            <div style={{
+              flex: 1,
+              overflowY: 'auto',
+              padding: '16px',
+              backgroundColor: '#f8f9fa',
+            }}>
+              {chatMessages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    marginBottom: '12px',
+                    display: 'flex',
+                    justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                  }}
+                >
+                  <div style={{
+                    maxWidth: '75%',
+                    padding: '10px 12px',
+                    borderRadius: msg.sender === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
+                    backgroundColor: msg.sender === 'user' ? '#2d667c' : 'white',
+                    color: msg.sender === 'user' ? 'white' : '#333',
+                    fontSize: '13px',
+                    lineHeight: '1.4',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                  }}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+              
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '12px' }}>
+                  <div style={{
+                    padding: '10px 12px',
+                    borderRadius: '12px 12px 12px 2px',
+                    backgroundColor: 'white',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                    display: 'flex',
+                    gap: '4px',
+                  }}>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#2d667c', animation: 'bounce 1.4s infinite' }}></span>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#2d667c', animation: 'bounce 1.4s infinite 0.2s' }}></span>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#2d667c', animation: 'bounce 1.4s infinite 0.4s' }}></span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Scroll anchor */}
+              <div ref={chatMessagesEndRef} />
+              
+              {/* Quick Reply Buttons */}
+              {chatStep === 0 && !isTyping && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+                  {['Website Development', 'App Development', 'Digital Marketing', 'SEO', 'Other'].map((service) => (
+                    <button
+                      key={service}
+                      onClick={() => {
+                        setChatMessages(prev => [...prev, { text: service, sender: 'user' }]);
+                        setIsTyping(true);
+                        setChatData(prev => ({ ...prev, service }));
+                        setTimeout(() => {
+                          setIsTyping(false);
+                          setChatMessages(prev => [...prev, { text: `Great choice! What's your name?`, sender: 'bot' }]);
+                          setChatStep(1);
+                        }, 600);
+                      }}
+                      style={{
+                        padding: '10px 12px',
+                        backgroundColor: 'white',
+                        border: '1px solid #e0e0e0',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        textAlign: 'left',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = '#f0f0f0';
+                        e.currentTarget.style.borderColor = '#2d667c';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = 'white';
+                        e.currentTarget.style.borderColor = '#e0e0e0';
+                      }}
+                    >
+                      {service}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Chat Input */}
+            {chatStep < 4 && chatStep > 0 && (
+              <div style={{
+                padding: '12px 12px 12px 12px',
+                borderTop: '1px solid #e0e0e0',
+                backgroundColor: 'white',
+              }}>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleChatSend()}
+                    placeholder="Type here..."
+                    style={{
+                      flex: 1,
+                      padding: '10px 12px',
+                      border: '1px solid #e0e0e0',
+                      borderRadius: '8px',
+                      fontSize: '13px',
+                      outline: 'none',
+                      minWidth: 0,
+                    }}
+                    onFocus={(e) => e.currentTarget.style.borderColor = '#2d667c'}
+                    onBlur={(e) => e.currentTarget.style.borderColor = '#e0e0e0'}
+                  />
+                  <button
+                    onClick={handleChatSend}
+                    disabled={!chatInput.trim()}
+                    style={{
+                      padding: '10px 14px',
+                      backgroundColor: chatInput.trim() ? '#2d667c' : '#d0d0d0',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: chatInput.trim() ? 'pointer' : 'not-allowed',
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      flexShrink: 0,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {/* WhatsApp Option */}
+            {chatStep === 0 && !isTyping && (
+              <div style={{
+                padding: '12px 16px',
+                borderTop: '1px solid #e0e0e0',
+                backgroundColor: 'white',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>Or chat with us on</div>
+                <a
+                  href="https://wa.me/1234567890"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 16px',
+                    backgroundColor: '#25D366',
+                    color: 'white',
+                    textDecoration: 'none',
+                    borderRadius: '8px',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#20BA5A'}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#25D366'}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  WhatsApp
+                </a>
+              </div>
+            )}
+            
+            {/* Completion Message */}
+            {chatStep === 4 && (
+              <div style={{
+                padding: '16px',
+                borderTop: '1px solid #e0e0e0',
+                backgroundColor: '#f0fdf4',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: '13px', color: '#15803d', marginBottom: '10px' }}>
+                  ✅ Sent! We'll contact you soon.
+                </div>
+                <button
+                  onClick={() => {
+                    setIsChatOpen(false);
+                    setChatStep(0);
+                    setChatMessages([{ text: "Hi! What service are you interested in?", sender: 'bot' }]);
+                    setChatData({ name: '', email: '', service: '', message: '' });
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#2d667c',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                  }}
+                >
+                  New Chat
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
