@@ -1093,7 +1093,7 @@ export default function Home() {
                 textAlign: 'center',
               }}>
                 <div style={{ fontSize: '13px', color: '#15803d', marginBottom: '10px' }}>
-                  ✅ Sent! We'll contact you soon.
+                  ✅ Sent! We&apos;ll contact you soon.
                 </div>
                 <button
                   onClick={() => {
