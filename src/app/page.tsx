@@ -255,6 +255,8 @@ export default function Home() {
                 <span className="nav-dot">•</span>
                 <a className="nav-link" onClick={() => showPage('seo')}>SEO</a>
                 <span className="nav-dot">•</span>
+                <a href="/blog" className="nav-link">Blog</a>
+                <span className="nav-dot">•</span>
                 <a className="nav-link" onClick={() => showPage('contact')}>Contact Us</a>
               </nav>
             </div>
