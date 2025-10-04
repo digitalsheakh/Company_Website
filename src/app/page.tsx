@@ -397,7 +397,7 @@ export default function Home() {
             
             <div className="page-body">
               <p className="page-description">
-                Modern web development services for businesses of all sizes. Perfect landing pages to complex web applications, we build websites that convert visitors into customers.
+                <strong>Digital Sheakh Website Development</strong> - Modern web development services for businesses of all sizes. From perfect landing pages to complex web applications, Digital Sheakh builds websites that convert visitors into customers. Get professional website development by Digital Sheakh with affordable monthly plans.
               </p>
               
               <ul className="feature-list">
@@ -454,7 +454,7 @@ export default function Home() {
             
             <div className="page-body">
               <p className="page-description">
-                We develop Native and cross-platform mobile applications that solve problems and help you grow.
+                <strong>Digital Sheakh App Development</strong> - We develop native and cross-platform mobile applications that solve problems and help your business grow. Digital Sheakh offers expert iOS app development, Android app development, React Native, and Flutter app development services.
               </p>
               
               <ul className="feature-list">
@@ -503,7 +503,7 @@ export default function Home() {
             
             <div className="page-body">
               <p className="page-description">
-                Smart digital marketing services to grow your business and get real customers through advertising campaigns and social media marketing.
+                <strong>Digital Marketing by Digital Sheakh</strong> - Smart digital marketing services to grow your business and get real customers. Digital Sheakh provides expert Google Ads management, Meta Ads, TikTok advertising, social media marketing, and comprehensive digital marketing campaigns that deliver results.
               </p>
               
               <ul className="feature-list">
@@ -558,7 +558,7 @@ export default function Home() {
             
             <div className="page-body">
               <p className="page-description">
-                Professional SEO services to take your business on the top of search the search results. Get found by customers who are actively searching for your services.
+                <strong>SEO by Digital Sheakh</strong> - Professional search engine optimization services to take your business to the top of search results. SEO by Digital Sheakh helps you get found by customers actively searching for your services. Expert local SEO, technical SEO, and content optimization.
               </p>
               
               <ul className="feature-list">
