@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Digital Sheakh - Website Development, App Development & Digital Marketing Services",
-  description: "Digital Sheakh offers expert website development, app development, digital marketing, SEO services, and software development. Transform your business with Digital Sheakh's affordable IT solutions. Get professional web design, mobile apps, Google Ads, Meta Ads, and SEO by Digital Sheakh.",
+  title: "Digital Sheakh - IT solutions for Your Business",
+  description: "Transform your business with professional website development, mobile app development, digital marketing, and SEO services. Affordable IT solutions tailored to help your business grow online.",
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -79,8 +79,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://sheakh.digital",
     siteName: "Digital Sheakh",
-    title: "Digital Sheakh - Website Development, App Development & Digital Marketing Services",
-    description: "Digital Sheakh offers expert website development, app development, digital marketing by Digital Sheakh, SEO by Digital Sheakh, and software development. Transform your business with affordable IT solutions from Digital Sheakh.",
+    title: "Digital Sheakh - IT solutions for Your Business",
+    description: "Transform your business with professional website development, mobile app development, digital marketing, and SEO services. Affordable IT solutions tailored to help your business grow online.",
     images: [
       {
         url: "https://sheakh.digital/og-image.jpg",
@@ -92,8 +92,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Digital Sheakh - Website Development, App Development & Digital Marketing",
-    description: "Digital Sheakh offers website development, app development, digital marketing, SEO services, and software development. Get professional IT solutions from Digital Sheakh.",
+    title: "Digital Sheakh - IT solutions for Your Business",
+    description: "Transform your business with professional website development, mobile app development, digital marketing, and SEO services. Affordable IT solutions tailored to help your business grow online.",
     images: ["https://sheakh.digital/twitter-image.jpg"],
     creator: "@digitalsheakh",
   },
