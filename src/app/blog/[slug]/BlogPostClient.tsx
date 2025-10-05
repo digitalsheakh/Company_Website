@@ -415,12 +415,12 @@ export default function BlogPostClient({ slug }: { slug: string }) {
               color: 'white'
             }}>
               <h3 style={{ fontSize: '28px', marginBottom: '15px', fontWeight: '700' }}>
-                Let's Grow Your Business Together
+                Let&apos;s Grow Your Business Together
               </h3>
               <p style={{ fontSize: '17px', marginBottom: '25px', opacity: 0.95 }}>
                 Digital Sheakh offers professional website development, app development, digital marketing, and SEO services to help your business succeed online.
               </p>
-              <a href="/#contact" className="btn" style={{
+              <Link href="/#contact" className="btn" style={{
                 backgroundColor: 'white',
                 color: '#2d667c',
                 padding: '16px 32px',
@@ -431,7 +431,7 @@ export default function BlogPostClient({ slug }: { slug: string }) {
                 display: 'inline-block'
               }}>
                 Get Started Today
-              </a>
+              </Link>
             </div>
           </article>
 

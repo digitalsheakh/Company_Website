@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import Link from 'next/link';
 import toast, { Toaster } from 'react-hot-toast';
 
 export default function AdminLogin() {
@@ -161,9 +162,9 @@ export default function AdminLogin() {
         </form>
 
         <div style={{ marginTop: '20px', textAlign: 'center' }}>
-          <a href="/" style={{ color: '#2d667c', fontSize: '14px', textDecoration: 'none' }}>
+          <Link href="/" style={{ color: '#2d667c', fontSize: '14px', textDecoration: 'none' }}>
             ← Back to Website
-          </a>
+          </Link>
           </div>
         </div>
       </div>

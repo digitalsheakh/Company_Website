@@ -275,7 +275,7 @@ export default function LiveChat() {
                       setChatData(prev => ({ ...prev, service }));
                       setTimeout(() => {
                         setIsTyping(false);
-                        setChatMessages(prev => [...prev, { text: `Great choice! What's your name?`, sender: 'bot' }]);
+                        setChatMessages(prev => [...prev, { text: `Great choice! What&apos;s your name?`, sender: 'bot' }]);
                         setChatStep(1);
                       }, 600);
                     }}
