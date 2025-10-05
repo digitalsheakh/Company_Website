@@ -13,7 +13,6 @@ const SimpleMDE = dynamic(() => import('react-simplemde-editor'), { ssr: false }
 import 'easymde/dist/easymde.min.css';
 
 export default function EditBlogPost({ params }: { params: Promise<{ id: string }> }) {
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [postId, setPostId] = useState<string>('');
@@ -42,12 +41,12 @@ export default function EditBlogPost({ params }: { params: Promise<{ id: string 
       if (!currentUser) {
         router.push('/admin');
       } else {
-        setUser(currentUser);
         await loadPost();
       }
       setLoading(false);
     });
     return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, postId]);
 
   const loadPost = async () => {

@@ -13,7 +13,6 @@ const SimpleMDE = dynamic(() => import('react-simplemde-editor'), { ssr: false }
 import 'easymde/dist/easymde.min.css';
 
 export default function NewBlogPost() {
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const router = useRouter();
@@ -24,14 +23,11 @@ export default function NewBlogPost() {
   const [author, setAuthor] = useState('Digital Sheakh Team');
   const [tags, setTags] = useState('');
   const [image, setImage] = useState('');
-  const [published, setPublished] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
         router.push('/admin');
-      } else {
-        setUser(currentUser);
       }
       setLoading(false);
     });
