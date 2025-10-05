@@ -23,6 +23,11 @@ export default function BlogPage() {
   useEffect(() => {
     const loadPosts = async () => {
       try {
+        if (!db) {
+          console.error('Firebase not initialized');
+          setLoading(false);
+          return;
+        }
         const q = query(collection(db, 'blogs'), where('published', '==', true));
         const querySnapshot = await getDocs(q);
         const postsData: BlogPost[] = [];

@@ -29,6 +29,12 @@ export default function BlogPostClient({ slug }: { slug: string }) {
     
     const loadPost = async () => {
       try {
+        if (!db) {
+          console.error('Firebase not initialized');
+          setLoading(false);
+          return;
+        }
+        
         const docRef = doc(db, 'blogs', slug);
         const docSnap = await getDoc(docRef);
         
