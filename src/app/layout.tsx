@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Digital Sheakh - IT solutions for Your Business",
-  description: "Transform your business with professional website development, mobile app development, digital marketing, and SEO services. Affordable IT solutions tailored to help your business grow online.",
+  description: "We make websites and apps also help you market them, through search engine optimisation, Google Ads, Meta Ads, and email campaigns.",
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     url: "https://sheakh.digital",
     siteName: "Digital Sheakh",
     title: "Digital Sheakh - IT solutions for Your Business",
-    description: "Transform your business with professional website development, mobile app development, digital marketing, and SEO services. Affordable IT solutions tailored to help your business grow online.",
+    description: "We make websites and apps also help you market them, through search engine optimisation, Google Ads, Meta Ads, and email campaigns.",
     images: [
       {
         url: "https://sheakh.digital/og-image.jpg",
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Digital Sheakh - IT solutions for Your Business",
-    description: "Transform your business with professional website development, mobile app development, digital marketing, and SEO services. Affordable IT solutions tailored to help your business grow online.",
+    description: "We make websites and apps also help you market them, through search engine optimisation, Google Ads, Meta Ads, and email campaigns.",
     images: ["https://sheakh.digital/twitter-image.jpg"],
     creator: "@digitalsheakh",
   },
