@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, FormEvent, useEffect } from 'react';
+import Link from 'next/link';
 import emailjs from '@emailjs/browser';
 
 export default function Home() {

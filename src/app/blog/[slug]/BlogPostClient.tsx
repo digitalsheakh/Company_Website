@@ -128,7 +128,7 @@ export default function BlogPostClient({ slug }: { slug: string }) {
             <div className="section" style={{ textAlign: 'center', paddingTop: '100px' }}>
               <h1 style={{ fontSize: '32px', marginBottom: '20px', color: '#333' }}>Post Not Found</h1>
               <p className="section-text" style={{ marginBottom: '30px' }}>
-                The blog post you're looking for doesn't exist or has been removed.
+                The blog post you&apos;re looking for doesn&apos;t exist or has been removed.
               </p>
               <div className="cta-buttons">
                 <Link href="/blog" className="btn btn-primary">

@@ -41,7 +41,7 @@ export default function AdminLogin() {
       setTimeout(() => {
         router.push('/admin/dashboard');
       }, 1000);
-    } catch (err: any) {
+    } catch (err) {
       setError('Invalid email or password');
       toast.error('Invalid email or password. Please try again.', {
         duration: 4000,

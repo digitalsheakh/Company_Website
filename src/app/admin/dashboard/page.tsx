@@ -19,7 +19,7 @@ interface BlogPost {
 }
 
 export default function AdminDashboard() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<{ email: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const router = useRouter();
