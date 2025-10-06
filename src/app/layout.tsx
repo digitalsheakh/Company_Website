@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "Digital Sheakh - IT solutions for Your Business",
@@ -365,6 +366,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''} />
         {children}
       </body>
     </html>
