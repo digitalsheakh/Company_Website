@@ -167,13 +167,9 @@ export default function BlogPostClient({ slug }: { slug: string }) {
             <h2 className="tagline">IT solutions for Your Business</h2>
             
             <nav className="nav">
-              <Link className="nav-link" href="/#websites">Websites</Link>
+              <Link className="nav-link" href="/#business-development">Business Development</Link>
               <span className="nav-dot">•</span>
-              <Link className="nav-link" href="/#app-development">Apps</Link>
-              <span className="nav-dot">•</span>
-              <Link className="nav-link" href="/#digital-marketing">Digital Marketing</Link>
-              <span className="nav-dot">•</span>
-              <Link className="nav-link" href="/#seo">SEO</Link>
+              <Link className="nav-link" href="/#home">Home</Link>
               <span className="nav-dot">•</span>
               <Link className="nav-link" href="/blog">Blog</Link>
               <span className="nav-dot">•</span>
@@ -424,7 +420,7 @@ export default function BlogPostClient({ slug }: { slug: string }) {
                 Let&apos;s Grow Your Business Together
               </h3>
               <p style={{ fontSize: '17px', marginBottom: '25px', opacity: 0.95 }}>
-                Digital Sheakh offers professional website development, app development, digital marketing, and SEO services to help your business succeed online.
+                Digital Sheakh offers comprehensive business development services including social media management, website development, and digital marketing to help your business succeed online.
               </p>
               <Link href="/#contact" className="btn" style={{
                 backgroundColor: 'white',
@@ -465,10 +461,6 @@ export default function BlogPostClient({ slug }: { slug: string }) {
               <div className="contact-item">
                 <span className="contact-dot">•</span>
                 <span>www.sheakh.digital</span>
-              </div>
-              <div className="contact-item">
-                <span className="contact-dot">•</span>
-                <span>Moulvibazar, Bangladesh</span>
               </div>
             </div>
 

@@ -21,17 +21,22 @@ export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isChatMinimized, setIsChatMinimized] = useState(false);
   const [chatMessages, setChatMessages] = useState<Array<{text: string, sender: 'bot' | 'user'}>>([
-    { text: "Hi! What service are you interested in?", sender: 'bot' }
+    { text: "Hi! 👋 How can I help you today?", sender: 'bot' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [chatStep, setChatStep] = useState(0);
-  const [chatData, setChatData] = useState({ name: '', email: '', service: '', message: '' });
+  const [chatData, setChatData] = useState({ name: '', email: '', phone: '', service: '', message: '' });
   const [isTyping, setIsTyping] = useState(false);
   const chatMessagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize EmailJS
+  // Initialize EmailJS with error handling
   useEffect(() => {
-    emailjs.init('_5VLmkhbpDyqVK5Qn');
+    try {
+      emailjs.init('_5VLmkhbpDyqVK5Qn');
+      console.log('EmailJS initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize EmailJS:', error);
+    }
   }, []);
 
   // Auto-scroll chat to bottom
@@ -80,43 +85,72 @@ export default function Home() {
     setSubmitStatus('idle');
 
     try {
+      // Validate required fields first
+      if (!formData.name || !formData.email) {
+        throw new Error('Name and email are required');
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        throw new Error('Please provide a valid email address');
+      }
+
       // EmailJS credentials
       const serviceId = 'service_w4y5j3f';
       const templateId = 'template_gujx0yj';
       const autoReplyTemplateId = 'template_gpqqy6n';
 
-      console.log('Attempting to send email with:', {
+      console.log('Form submission attempt:', {
         serviceId,
         templateId,
         name: formData.name,
-        email: formData.email
+        email: formData.email,
+        emailjsLoaded: typeof emailjs !== 'undefined'
       });
 
-      // Parameters for team notification (Feedback Request template)
+      // Check if EmailJS is available
+      if (typeof emailjs === 'undefined') {
+        throw new Error('EmailJS is not loaded. Please refresh the page and try again.');
+      }
+
+      // Parameters matching your EmailJS template structure
       const teamParams = {
         from_name: formData.name,
         from_email: formData.email,
-        email: 'digitalsheakh@gmail.com', // To Email field in template
+        email: 'digitalsheakh@gmail.com', // Your template uses {{email}} for destination
         company: formData.company || 'Not provided',
         phone: formData.phone || 'Not provided',
         services: formData.services.join(', ') || 'Not specified',
+        message: `New inquiry from ${formData.name} (${formData.email})\n\nCompany: ${formData.company || 'Not provided'}\nPhone: ${formData.phone || 'Not provided'}\nServices: ${formData.services.join(', ') || 'Not specified'}`
       };
 
-      // Send notification to your team
-      console.log('Sending team notification...');
-      const response1 = await emailjs.send(serviceId, templateId, teamParams);
-      console.log('Team notification sent:', response1);
+      console.log('Sending team notification with params:', teamParams);
       
-      // Parameters for auto-reply (Auto-Reply template)
-      const autoReplyParams = {
-        to_name: formData.name,
-        email: formData.email, // To Email field in template
-      };
+      // Send team notification with timeout
+      const response1 = await Promise.race([
+        emailjs.send(serviceId, templateId, teamParams),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Email timeout - please try again')), 10000)
+        )
+      ]);
       
-      // Send auto-reply to customer
-      console.log('Sending auto-reply...');
-      const response2 = await emailjs.send(serviceId, autoReplyTemplateId, autoReplyParams);
-      console.log('Auto-reply sent:', response2);
+      console.log('Team notification sent successfully:', response1);
+
+      // Try to send auto-reply (don't fail the whole process if this fails)
+      try {
+        const autoReplyParams = {
+          to_name: formData.name,
+          email: formData.email, // Your template uses {{email}} for destination
+          from_name: 'Digital Sheakh'
+        };
+        
+        console.log('Sending auto-reply with params:', autoReplyParams);
+        const response2 = await emailjs.send(serviceId, autoReplyTemplateId, autoReplyParams);
+        console.log('Auto-reply sent successfully:', response2);
+      } catch (autoReplyError) {
+        console.warn('Auto-reply failed, but main email was sent:', autoReplyError);
+      }
 
       setSubmitStatus('success');
       setFormData({ name: '', company: '', email: '', phone: '', services: [] });
@@ -124,19 +158,99 @@ export default function Home() {
       setTimeout(() => {
         setSubmitStatus('idle');
       }, 5000);
+
     } catch (error: unknown) {
-      console.error('Error sending email:', error);
-      const errorObj = error as { message?: string; text?: string; status?: number };
-      console.error('Error details:', {
+      console.error('Form submission error:', error);
+      
+      const errorObj = error as { message?: string; text?: string; status?: number; name?: string };
+      
+      // Log detailed error information
+      console.error('Detailed error info:', {
         message: errorObj?.message,
         text: errorObj?.text,
         status: errorObj?.status,
-        full: JSON.stringify(error)
+        name: errorObj?.name,
+        type: typeof error,
+        full: error
       });
+
+      // Show user-friendly error message
+      let userMessage = 'There was an error sending your message. ';
+      
+      if (errorObj?.message?.includes('timeout')) {
+        userMessage += 'The request timed out. Please check your internet connection and try again.';
+      } else if (errorObj?.message?.includes('EmailJS')) {
+        userMessage += 'Email service is temporarily unavailable. Please try again in a few minutes.';
+      } else if (errorObj?.status === 400) {
+        userMessage += 'Please check your information and try again.';
+      } else if (errorObj?.status === 401) {
+        userMessage += 'Authentication error. Please contact support.';
+      } else {
+        userMessage += 'Please try again or contact us directly at digitalsheakh@gmail.com';
+      }
+
+      // Show fallback contact options
+      const fallbackMessage = `${userMessage}\n\nAlternative ways to contact us:\n• Email: digitalsheakh@gmail.com\n• WhatsApp: Click the WhatsApp button in the chat\n• Try the live chat feature`;
+      
+      if (confirm(fallbackMessage + '\n\nWould you like to copy our email address to your clipboard?')) {
+        navigator.clipboard.writeText('digitalsheakh@gmail.com').catch(() => {
+          console.log('Could not copy to clipboard');
+        });
+      }
+      
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Concise chat responses for business development queries
+  const getBotResponse = (userMessage: string, originalMessage: string) => {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Business Development specific queries
+    if (lowerMessage.includes('social media') || lowerMessage.includes('facebook') || lowerMessage.includes('instagram') || lowerMessage.includes('tiktok')) {
+      return "📱 Social media management with daily posts, customer responses & engagement. Ready to get started?";
+    }
+    
+    if (lowerMessage.includes('tripadvisor') || lowerMessage.includes('trip advisor')) {
+      return "🏨 Complete TripAdvisor management - profile optimization, reviews & rankings. Interested?";
+    }
+    
+    if (lowerMessage.includes('customer') && (lowerMessage.includes('support') || lowerMessage.includes('service') || lowerMessage.includes('queries') || lowerMessage.includes('inquiries'))) {
+      return "💬 24/7 customer support & inquiry management. Want to learn more?";
+    }
+    
+    if (lowerMessage.includes('website') || lowerMessage.includes('web development')) {
+      return "🌐 Custom websites + ongoing maintenance. Ready to discuss your project?";
+    }
+    
+    if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('pricing')) {
+      return "💰 Starting at £299/month, flexible plans. Want a personalized quote?";
+    }
+    
+    if (lowerMessage.includes('seo') || lowerMessage.includes('search engine')) {
+      return "🔍 SEO services to boost your rankings & visibility. Interested?";
+    }
+    
+    if (lowerMessage.includes('review') || lowerMessage.includes('reputation')) {
+      return "⭐ Review management across all platforms. Want to improve your reputation?";
+    }
+    
+    if (lowerMessage.includes('business growth') || lowerMessage.includes('grow business') || lowerMessage.includes('business development')) {
+      return "📈 Complete digital growth package. Ready to grow your business?";
+    }
+    
+    if (lowerMessage.includes('help') || lowerMessage.includes('what do you do') || lowerMessage.includes('services')) {
+      return "🚀 We offer: Social Media, Websites, SEO, Customer Support & more. What interests you?";
+    }
+    
+    // Default responses for general queries
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+      return "Hello! 😊 We help businesses grow online. What can I help you with?";
+    }
+    
+    return "Let me connect you with our team! What's your name?";
   };
 
   // Handle Chat Messages
@@ -154,44 +268,67 @@ export default function Home() {
       let botResponse = '';
       
       if (chatStep === 0) {
-        // Check if user wants to change service or asking questions
+        // Enhanced query handling for step 0
         if (userMessage.includes('change') || userMessage.includes('different') || userMessage.includes('another')) {
-          botResponse = `No problem! Which service would you like to know about?`;
-        } else {
-          // Service selection
-          setChatData(prev => ({ ...prev, service: originalMessage }));
-          botResponse = `Great choice! What's your name?`;
+          botResponse = `What can I help you with? 😊`;
+        } else if (userMessage.includes('quote') || userMessage.includes('get started') || userMessage.includes('interested') || userMessage.includes('yes') || userMessage.includes('ready')) {
+          botResponse = `Great! What's your name?`;
           setChatStep(1);
+        } else if (userMessage.includes('social media') || userMessage.includes('tripadvisor') || userMessage.includes('customer support') || userMessage.includes('website') || userMessage.includes('pricing') || userMessage.includes('seo') || userMessage.includes('review')) {
+          // If user mentions any service, start collecting their info
+          setChatData(prev => ({ ...prev, service: originalMessage }));
+          botResponse = `Great choice! 😊 What's your name?`;
+          setChatStep(1);
+        } else {
+          // For general queries, provide brief info and ask for contact details
+          botResponse = getBotResponse(userMessage, originalMessage);
+          // Always advance to collecting info after any query
+          setChatData(prev => ({ ...prev, service: originalMessage }));
+          setTimeout(() => {
+            setChatMessages(prev => [...prev, { text: "What's your name so I can help you better? 😊", sender: 'bot' }]);
+            setChatStep(1);
+          }, 1000);
         }
       } else if (chatStep === 1) {
         // Check if user wants to go back or change service
         if (userMessage.includes('back') || userMessage.includes('change service') || userMessage.includes('different service')) {
-          botResponse = `Sure! What service are you interested in?`;
+          botResponse = `What can I help you with? 😊`;
           setChatStep(0);
           setChatData(prev => ({ ...prev, service: '' }));
         } else {
           // Name
           setChatData(prev => ({ ...prev, name: originalMessage }));
-          botResponse = `Nice to meet you, ${originalMessage}! What's your email?`;
+          botResponse = `Hi ${originalMessage}! 📧 What's your email?`;
           setChatStep(2);
         }
       } else if (chatStep === 2) {
         // Check if user wants to go back
         if (userMessage.includes('back') || userMessage.includes('change')) {
-          botResponse = `No problem! What's your name?`;
+          botResponse = `What's your name?`;
           setChatStep(1);
         } else {
           // Email validation
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(originalMessage)) {
-            botResponse = `Please provide a valid email address.`;
+            botResponse = `Please enter a valid email address 📧`;
           } else {
             setChatData(prev => ({ ...prev, email: originalMessage }));
-            botResponse = `Perfect! Tell us about your project requirements.`;
+            botResponse = `📱 What's your phone number?`;
             setChatStep(3);
           }
         }
       } else if (chatStep === 3) {
+        // Check if user wants to go back
+        if (userMessage.includes('back') || userMessage.includes('change')) {
+          botResponse = `What's your email? 📧`;
+          setChatStep(2);
+        } else {
+          // Phone number
+          setChatData(prev => ({ ...prev, phone: originalMessage }));
+          botResponse = `💬 Tell us about your project needs:`;
+          setChatStep(4);
+        }
+      } else if (chatStep === 4) {
         // Check if user wants to go back
         if (userMessage.includes('back') || userMessage.includes('change')) {
           botResponse = `Sure! What's your email?`;
@@ -199,28 +336,54 @@ export default function Home() {
         } else {
           // Message
           setChatData(prev => ({ ...prev, message: originalMessage }));
-          botResponse = `Thank you! We'll get back to you within 24 hours. Check your email for confirmation.`;
-          setChatStep(4);
+          botResponse = `✅ Thank you! We'll contact you soon.`;
+          setChatStep(5);
           
-          // Send email via EmailJS
+          // Send email via EmailJS with robust error handling
           const chatFormData = {
             ...chatData,
             message: originalMessage
           };
           
-          emailjs.send('service_w4y5j3f', 'template_gujx0yj', {
-            from_name: chatFormData.name,
-            from_email: chatFormData.email,
-            email: 'digitalsheakh@gmail.com',
-            company: 'Chat Inquiry',
-            phone: 'N/A',
-            services: `${chatFormData.service} - ${chatFormData.message}`,
-          }).then(() => {
-            emailjs.send('service_w4y5j3f', 'template_gpqqy6n', {
-              to_name: chatFormData.name,
-              email: chatFormData.email,
-            });
-          });
+          // Only send email if EmailJS is available
+          if (typeof emailjs !== 'undefined') {
+            try {
+              // Send team notification matching your template structure
+              const chatParams = {
+                from_name: chatFormData.name,
+                from_email: chatFormData.email,
+                email: 'digitalsheakh@gmail.com', // Your template uses {{email}} for destination
+                company: 'Chat Inquiry',
+                phone: chatFormData.phone || 'Not provided',
+                services: chatFormData.service,
+                message: `Chat inquiry from ${chatFormData.name} (${chatFormData.email})\n\nPhone: ${chatFormData.phone}\nService Interest: ${chatFormData.service}\nMessage: ${chatFormData.message}`
+              };
+
+              console.log('Sending chat email with params:', chatParams);
+              
+              emailjs.send('service_w4y5j3f', 'template_gujx0yj', chatParams)
+                .then((response) => {
+                  console.log('Chat email sent successfully:', response);
+                  // Try to send auto-reply (optional)
+                  return emailjs.send('service_w4y5j3f', 'template_gpqqy6n', {
+                    to_name: chatFormData.name,
+                    email: chatFormData.email, // Your template uses {{email}} for destination
+                    from_name: 'Digital Sheakh'
+                  });
+                })
+                .then((response) => {
+                  console.log('Chat auto-reply sent successfully:', response);
+                })
+                .catch((error) => {
+                  console.error('Chat email error:', error);
+                  // Don't show error to user since they already got confirmation
+                });
+            } catch (error) {
+              console.error('Chat email setup error:', error);
+            }
+          } else {
+            console.warn('EmailJS not available for chat email');
+          }
         }
       }
 
@@ -248,13 +411,9 @@ export default function Home() {
               <h2 className="tagline">IT solutions for Your Business</h2>
               
               <nav className="nav">
-                <a className="nav-link" onClick={() => showPage('websites')}>Websites</a>
+                <a className="nav-link" onClick={() => showPage('business-development')}>Business Development</a>
                 <span className="nav-dot">•</span>
-                <a className="nav-link" onClick={() => showPage('app-development')}>Apps</a>
-                <span className="nav-dot">•</span>
-                <a className="nav-link" onClick={() => showPage('digital-marketing')}>Digital Marketing</a>
-                <span className="nav-dot">•</span>
-                <a className="nav-link" onClick={() => showPage('seo')}>SEO</a>
+                <a className="nav-link" onClick={() => showPage('home')}>Home</a>
                 <span className="nav-dot">•</span>
                 <Link className="nav-link" href="/blog">Blog</Link>
                 <span className="nav-dot">•</span>
@@ -265,14 +424,14 @@ export default function Home() {
             <div className="section">
               <h3 className="section-title">Who are we?</h3>
               <p className="section-text">
-                We are Digital Sheakh. We make websites and apps also help you market them, through search engine optimisation, Google Ads, Meta Ads, and email campaigns.
+                We are Digital Sheakh, your trusted partner for comprehensive business development. We create websites and apps, manage your digital presence, and help grow your business through strategic online marketing and customer engagement.
               </p>
             </div>
 
             <div className="section">
               <h3 className="section-title">Where are we?</h3>
               <p className="section-text">
-                Our office is in Moulvibazar, Bangladesh. Ideally placed to support businesses worldwide. We have a team of IT professionals and marketing experts located globally to help you with your business needs.
+                We provide worldwide service. We have a team of IT professionals and marketing experts located globally to help you with your business needs.
               </p>
             </div>
 
@@ -302,38 +461,33 @@ export default function Home() {
 
             <div className="section">
               <h3 className="section-title">Our Services</h3>
-              <p className="section-text">Explore what we can do for your business:</p>
+              <p className="section-text">Comprehensive digital solutions to accelerate your business growth:</p>
 
               <div className="service-grid">
-                <button className="service-btn" onClick={() => showPage('websites')}>
-                  <span>Websites</span>
+                <button className="service-btn" onClick={() => showPage('business-development')}>
+                  <span>Business Development</span>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                    <line x1="8" y1="21" x2="16" y2="21"/>
-                    <line x1="12" y1="17" x2="12" y2="21"/>
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                   </svg>
                 </button>
-                <button className="service-btn" onClick={() => showPage('app-development')}>
-                  <span>Mobile Apps</span>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-                    <line x1="12" y1="18" x2="12.01" y2="18"/>
-                  </svg>
-                </button>
-                <button className="service-btn" onClick={() => showPage('digital-marketing')}>
-                  <span>Digital Marketing</span>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="m3 11 18-5v12L3 14v-3z"/>
-                    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
-                  </svg>
-                </button>
-                <button className="service-btn" onClick={() => showPage('seo')}>
-                  <span>SEO</span>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="11" cy="11" r="8"/>
-                    <path d="m21 21-4.35-4.35"/>
-                  </svg>
-                </button>
+              </div>
+              
+              <div style={{ 
+                marginTop: '20px', 
+                padding: '20px', 
+                backgroundColor: '#f8f9fa', 
+                borderRadius: '8px',
+                borderLeft: '4px solid #2d667c'
+              }}>
+                <p style={{ 
+                  fontSize: '15px', 
+                  lineHeight: '1.6', 
+                  color: '#555', 
+                  margin: '0',
+                  fontStyle: 'italic'
+                }}>
+                  From social media management and customer support to website development and TripAdvisor optimization - we handle your complete digital presence so you can focus on running your business.
+                </p>
               </div>
             </div>
 
@@ -357,10 +511,6 @@ export default function Home() {
               <div className="contact-item">
                 <span className="contact-dot">•</span>
                 <span>www.sheakh.digital</span>
-              </div>
-              <div className="contact-item">
-                <span className="contact-dot">•</span>
-                <span>Moulvibazar, Bangladesh, 3200</span>
               </div>
             </div>
 
@@ -391,218 +541,357 @@ export default function Home() {
              
           </div>
 
-          {/* Website Development Page */}
-          <div id="websites" className={`page-content ${activePage === 'websites' ? 'active' : ''}`}>
+          {/* Business Development Page */}
+          <div id="business-development" className={`page-content ${activePage === 'business-development' ? 'active' : ''}`}>
             <div className="page-header">
-              <h1 className="page-title">Website Development</h1>
+              <h1 className="page-title">Business Development</h1>
               <button className="close-btn" onClick={() => showPage('home')}>✕</button>
             </div>
             
             <div className="page-body">
-              <p className="page-description">
-                <strong>Digital Sheakh Website Development</strong> - Modern web development services for businesses of all sizes. From perfect landing pages to complex web applications, Digital Sheakh builds websites that convert visitors into customers. Get professional website development by Digital Sheakh with affordable monthly plans.
-              </p>
-              
-              <ul className="feature-list">
-                <li><span className="feature-dot"></span> Responsive design that works perfectly on all devices</li>
-                <li><span className="feature-dot"></span> Modern, fast-loading websites with cutting-edge technology</li>
-                <li><span className="feature-dot"></span> Custom CMS and content management systems</li>
-                <li><span className="feature-dot"></span> SEO optimized structure for better search rankings</li>
-                <li><span className="feature-dot"></span> Ongoing maintenance and support</li>
-                <li><span className="feature-dot"></span> Shop, restaurant, and service websites</li>
-              </ul>
-              
-              <p className="award-text">
-                We use the latest technologies to build high-performance websites.
-              </p>
-              
-              <p className="projects-intro">Technologies we work with:</p>
-              <ul className="projects-list">
-                <li><span className="project-dot">○</span> <em>React & Next.js</em></li>
-                <li><span className="project-dot">○</span> <em>WordPress & Webflow & wix & framer </em></li>
-                <li><span className="project-dot">○</span> <em>Shopify</em></li>
-                <li><span className="project-dot">○</span> <em>Node.js & Python Backend</em></li>
-              </ul>
-              
-              <p className="pricing">
-                Prices start at just $29 per month, with nothing up front.
-                <span className="pricing-highlight">If you have your concept ready we will design, develop and deploy it for you!!</span>
-              </p>
-              
-              <div className="cta-buttons">
-                <a href="#contact" className="btn btn-primary" onClick={(e) => { e.preventDefault(); showPage('contact'); }}>
-                  
-                  
-                  Get a Free Quote
-                </a>
-                <a href="mailto:digitalsheakh@gmail.com" className="btn btn-primary">
-                  
-                 Email Us
-                </a>
+              <div style={{ 
+                backgroundColor: '#f8f9fa', 
+                padding: '20px', 
+                borderRadius: '10px', 
+                marginBottom: '30px',
+                borderLeft: '4px solid #2d667c'
+              }}>
+                <h2 style={{ 
+                  fontSize: '24px', 
+                  marginBottom: '15px', 
+                  color: '#2d667c',
+                  borderBottom: '1px solid #e0e0e0',
+                  paddingBottom: '10px'
+                }}>
+                  Digital Sheakh Business Development
+                </h2>
+                <p style={{ 
+                  fontSize: '17px', 
+                  lineHeight: '1.7',
+                  color: '#333',
+                  fontWeight: '400'
+                }}>
+                  Top business growth services designed to help your business grow in the digital world. We handle everything from customer engagement and social media management to website development and online reputation management, so you can focus on what you do best.
+                </p>
               </div>
-            </div>
-            
-            <div className="page-navigation">
-              <a className="nav-arrow" onClick={() => showPage('home')}>← Home</a>
-              <a className="nav-arrow" onClick={() => showPage('app-development')}>App Development →</a>
-            </div>
-          </div>
-
-          {/* App Development Page */}
-          <div id="app-development" className={`page-content ${activePage === 'app-development' ? 'active' : ''}`}>
-            <div className="page-header">
-              <h1 className="page-title">App Development</h1>
-              <button className="close-btn" onClick={() => showPage('home')}>✕</button>
-            </div>
-            
-            <div className="page-body">
-              <p className="page-description">
-                <strong>Digital Sheakh App Development</strong> - We develop native and cross-platform mobile applications that solve problems and help your business grow. Digital Sheakh offers expert iOS app development, Android app development, React Native, and Flutter app development services.
-              </p>
               
-              <ul className="feature-list">
-                <li><span className="feature-dot"></span> iOS and Android native app development</li>
-                <li><span className="feature-dot"></span> Cross-platform apps with React Native</li>
-                <li><span className="feature-dot"></span> Progressive Web Apps</li>
-                <li><span className="feature-dot"></span> App Store optimization and deployment</li>
-                <li><span className="feature-dot"></span> Backend API development and integration and admin panel</li>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '30px' }}>
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '20px', 
+                  borderRadius: '8px', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  border: '1px solid #eee'
+                }}>
+                  <h3 style={{ color: '#2d667c', marginBottom: '12px', fontSize: '18px' }}>Photo & Video Editing</h3>
+                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.5' }}>Professional editing for your marketing materials to create engaging content for your audience.</p>
+                </div>
                 
-                <li><span className="feature-dot"></span> App maintenance and updates</li>
-              </ul>
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '20px', 
+                  borderRadius: '8px', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  border: '1px solid #eee'
+                }}>
+                  <h3 style={{ color: '#2d667c', marginBottom: '12px', fontSize: '18px' }}>Social Media Management</h3>
+                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.5' }}>Complete social media management including regular content updates, customer query responses, and engagement across Facebook, Instagram, TikTok, and other platforms to build strong customer relationships.</p>
+                </div>
+                
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '20px', 
+                  borderRadius: '8px', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  border: '1px solid #eee'
+                }}>
+                  <h3 style={{ color: '#2d667c', marginBottom: '12px', fontSize: '18px' }}>Website Development</h3>
+                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.5' }}>Custom websites that convert visitors to customers with modern design and functionality.</p>
+                </div>
+                
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '20px', 
+                  borderRadius: '8px', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  border: '1px solid #eee'
+                }}>
+                  <h3 style={{ color: '#2d667c', marginBottom: '12px', fontSize: '18px' }}>SEO Services</h3>
+                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.5' }}>Improve your search rankings and visibility to attract more organic traffic to your business.</p>
+                </div>
+                
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '20px', 
+                  borderRadius: '8px', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  border: '1px solid #eee'
+                }}>
+                  <h3 style={{ color: '#2d667c', marginBottom: '12px', fontSize: '18px' }}>Google Business Profile</h3>
+                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.5' }}>Optimization and regular updates to improve local search visibility and customer engagement.</p>
+                </div>
+                
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '20px', 
+                  borderRadius: '8px', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  border: '1px solid #eee'
+                }}>
+                  <h3 style={{ color: '#2d667c', marginBottom: '12px', fontSize: '18px' }}>TripAdvisor Management</h3>
+                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.5' }}>Complete TripAdvisor optimization including profile management, review responses, photo updates, and strategic improvements to boost your hospitality business rankings and attract more customers.</p>
+                </div>
+                
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '20px', 
+                  borderRadius: '8px', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  border: '1px solid #eee'
+                }}>
+                  <h3 style={{ color: '#2d667c', marginBottom: '12px', fontSize: '18px' }}>Review Management</h3>
+                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.5' }}>Monitor and respond to customer reviews to build trust and improve your online reputation.</p>
+                </div>
+                
+                <div style={{ 
+                  backgroundColor: 'white', 
+                  padding: '20px', 
+                  borderRadius: '8px', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  border: '1px solid #eee'
+                }}>
+                  <h3 style={{ color: '#2d667c', marginBottom: '12px', fontSize: '18px' }}>Customer Support & Engagement</h3>
+                  <p style={{ color: '#555', fontSize: '14px', lineHeight: '1.5' }}>Professional handling of customer inquiries, social media messages, and support requests to ensure excellent customer service and maintain strong business relationships.</p>
+                </div>
+              </div>
               
-              <p className="page-text">
-                Our mobile development team has years of experience creating apps for our clients. We follow best practices to ensure your app is ready to scale and innovative.
-              </p>
+              <div style={{ 
+                backgroundColor: '#edf7fd', 
+                padding: '25px', 
+                borderRadius: '10px', 
+                marginBottom: '30px',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '100px',
+                  height: '100px',
+                  background: 'linear-gradient(135deg, #2d667c 25%, transparent 25%)',
+                  opacity: 0.1
+                }}></div>
+                <h3 style={{ 
+                  fontSize: '20px', 
+                  marginBottom: '15px', 
+                  color: '#2d667c',
+                  fontWeight: '600'
+                }}></h3>
+                
+              </div>
               
-              <p className="pricing">
-                Perfect app development with flexible pricing.
-                <span className="pricing-highlight">We develop and maintain apps with affordable montly price with nothing upfront. So do not worry about maintenance and updates.</span>
-              </p>
+              <div style={{ 
+                backgroundColor: '#f8fffe', 
+                padding: '25px', 
+                borderRadius: '10px', 
+                marginBottom: '30px',
+                border: '1px solid #e8f5f3'
+              }}>
+                <h3 style={{ 
+                  fontSize: '20px', 
+                  marginBottom: '20px', 
+                  color: '#2d667c',
+                  fontWeight: '600',
+                  textAlign: 'center'
+                }}>What You Get With Our Service</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ color: '#2d667c', fontSize: '18px' }}>✓</span>
+                    <span style={{ fontSize: '14px', color: '#333' }}>24/7 customer inquiry management</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ color: '#2d667c', fontSize: '18px' }}>✓</span>
+                    <span style={{ fontSize: '14px', color: '#333' }}>Professional social media presence</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ color: '#2d667c', fontSize: '18px' }}>✓</span>
+                    <span style={{ fontSize: '14px', color: '#333' }}>TripAdvisor optimization & monitoring</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ color: '#2d667c', fontSize: '18px' }}>✓</span>
+                    <span style={{ fontSize: '14px', color: '#333' }}>Increased online visibility</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ color: '#2d667c', fontSize: '18px' }}>✓</span>
+                    <span style={{ fontSize: '14px', color: '#333' }}>Better customer relationships</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ color: '#2d667c', fontSize: '18px' }}>✓</span>
+                    <span style={{ fontSize: '14px', color: '#333' }}>Consistent business growth</span>
+                  </div>
+                </div>
+              </div>
               
-              <div className="cta-buttons">
-                <a href="#contact" className="btn btn-primary" onClick={(e) => { e.preventDefault(); showPage('contact'); }}>
-                  
+              <div style={{ 
+                backgroundColor: '#f5f5f5', 
+                padding: '25px', 
+                borderRadius: '10px', 
+                marginBottom: '30px',
+                textAlign: 'center',
+                border: '1px solid #e0e0e0'
+              }}>
+                <h3 style={{ 
+                  fontSize: '24px', 
+                  marginBottom: '10px', 
+                  color: '#2d667c',
+                  fontWeight: '600'
+                }}>Pricing</h3>
+                <div style={{ 
+                  fontSize: '36px', 
+                  fontWeight: '700', 
+                  color: '#333',
+                  marginBottom: '10px'
+                }}>
+                  £299<span style={{ fontSize: '18px', fontWeight: '400' }}>/month</span>
+                </div>
+                <p style={{ 
+                  fontSize: '16px', 
+                  color: '#555',
+                  marginBottom: '5px'
+                }}>
+                  Price depends on business size
+                </p>
+                <p style={{ 
+                  fontSize: '16px', 
+                  color: '#555',
+                  fontWeight: '500'
+                }}>
+                  No upfront costs • Flexible monthly plans
+                </p>
+              </div>
+              
+              <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a 
+                  href="#contact" 
+                  onClick={(e) => { e.preventDefault(); showPage('contact'); }}
+                  style={{
+                    backgroundColor: '#2d667c',
+                    color: 'white',
+                    padding: '14px 28px',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 6px rgba(45, 102, 124, 0.2)',
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#235264'}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#2d667c'}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <line x1="10" y1="9" x2="8" y2="9"/>
+                  </svg>
                   Get a Free Quote
                 </a>
-                <a href="mailto:digitalsheakh@gmail.com" className="btn btn-primary">
-                  
+                <a 
+                  href="mailto:digitalsheakh@gmail.com"
+                  style={{
+                    backgroundColor: 'white',
+                    color: '#2d667c',
+                    padding: '14px 28px',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+                    border: '1px solid #2d667c',
+                    cursor: 'pointer'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f0f7fa';
+                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = 'white';
+                    e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
                   Email Us
                 </a>
               </div>
             </div>
             
-            <div className="page-navigation">
-              <a className="nav-arrow" onClick={() => showPage('websites')}>← Website Development</a>
-              <a className="nav-arrow" onClick={() => showPage('digital-marketing')}>Digital Marketing →</a>
-            </div>
-          </div>
-
-          {/* Digital Marketing Page */}
-          <div id="digital-marketing" className={`page-content ${activePage === 'digital-marketing' ? 'active' : ''}`}>
-            <div className="page-header">
-              <h1 className="page-title">Digital Marketing</h1>
-              <button className="close-btn" onClick={() => showPage('home')}>✕</button>
-            </div>
-            
-            <div className="page-body">
-              <p className="page-description">
-                <strong>Digital Marketing by Digital Sheakh</strong> - Smart digital marketing services to grow your business and get real customers. Digital Sheakh provides expert Google Ads management, Meta Ads, TikTok advertising, social media marketing, and comprehensive digital marketing campaigns that deliver results.
-              </p>
-              
-              <ul className="feature-list">
-                <li><span className="feature-dot"></span> <strong>Google Ads</strong> - Search, Display, and Shopping campaigns</li>
-                <li><span className="feature-dot"></span> <strong>Meta Ads</strong> - Facebook and Instagram advertising</li>
-                <li><span className="feature-dot">•</span> <strong>TikTok Ads</strong> - Reach younger audiences with viral content</li>
-                <li><span className="feature-dot">•</span> <strong>TripAdvisor Marketing</strong> - Perfect for hospitality businesses</li>
-                <li><span className="feature-dot">•</span> <strong>Email Marketing</strong> - Automated campaigns that convert</li>
-                <li><span className="feature-dot">•</span> <strong>Social Media Management</strong> - Build your brand online</li>
-                <li><span className="feature-dot">•</span> <strong>Content Creation</strong> - Blogs writing</li>
-                <li><span className="feature-dot">•</span> <strong>Video Production</strong> - Professional promotional videos</li>
-                <li><span className="feature-dot">•</span> <strong>Graphic Design</strong> - Logos, banners, and posters</li>
-              </ul>
-              
-              <p className="award-text">
-                We are professionals with years of experience in digital marketing and we are here to help you grow your business.
-              </p>
-              
-              <p className="page-text">
-                Our data driven strategy means every marketing spend is tracked and optimized for maximum return. We provide detailed monthly reports showing exactly how your campaigns are performing.
-              </p>
-              
-              <p className="pricing">
-                Starting from $199 per month.
-                <span className="pricing-highlight">Nothing upfront and flexible monthly plans to suit your budget.</span>
-              </p>
-              
-              <div className="cta-buttons">
-                <a href="#contact" className="btn btn-primary" onClick={(e) => { e.preventDefault(); showPage('contact'); }}>
-                  
-                  Get a Free Quote
-                </a>
-                <a href="mailto:digitalsheakh@gmail.com" className="btn btn-primary">
-                  
-                  Email Us
-                </a>
-              </div>
-            </div>
-            
-            <div className="page-navigation">
-              <a className="nav-arrow" onClick={() => showPage('app-development')}>← App Development</a>
-              <a className="nav-arrow" onClick={() => showPage('seo')}>SEO →</a>
-            </div>
-          </div>
-
-          {/* SEO Page */}
-          <div id="seo" className={`page-content ${activePage === 'seo' ? 'active' : ''}`}>
-            <div className="page-header">
-              <h1 className="page-title">SEO - Search Engine Optimization</h1>
-              <button className="close-btn" onClick={() => showPage('home')}>✕</button>
-            </div>
-            
-            <div className="page-body">
-              <p className="page-description">
-                <strong>SEO by Digital Sheakh</strong> - Professional search engine optimization services to take your business to the top of search results. SEO by Digital Sheakh helps you get found by customers actively searching for your services. Expert local SEO, technical SEO, and content optimization.
-              </p>
-              
-              <ul className="feature-list">
-                <li><span className="feature-dot"></span> <strong>Keyword Research</strong> - Find the right keywords to target your audience</li>
-                <li><span className="feature-dot"></span> <strong>On Page SEO</strong> - Optimize your website content and structure</li>
-                <li><span className="feature-dot"></span> <strong>Technical SEO</strong> - Improve site speed, mobile-friendliness, and crawlability</li>
-                <li><span className="feature-dot"></span> <strong>Content Strategy</strong> - Create SEO-optimized content that ranks</li>
-                <li><span className="feature-dot"></span> <strong>Link Building</strong> - Build high quality backlinks to boost authority</li>
-                <li><span className="feature-dot"></span> <strong>Local SEO</strong> - Dominate local search results in your area</li>
-                <li><span className="feature-dot"></span> <strong>Analytics & Reporting</strong> - Track your rankings and traffic growth</li>
-                <li><span className="feature-dot"></span> <strong>Competitor Analysis</strong> - Stay ahead of every competitor</li>
-              </ul>
-              
-              <p className="award-text">
-                Our SEO strategies deliver long term, sustainable growth.
-              </p>
-              
-              <p className="page-text">
-                SEO is a long term investment that pays dividends. Unlike paid advertising, organic rankings continue to drive traffic without ongoing ad spend. We provide monthly reports showing your progress and ROI.
-              </p>
-              
-              <p className="pricing">
-                Starting from $99 per month.
-                <span className="pricing-highlight">Nothing upfront - see results within 3-6 months.</span>
-              </p>
-              
-              <div className="cta-buttons">
-                <a href="#contact" className="btn btn-primary" onClick={(e) => { e.preventDefault(); showPage('contact'); }}>
-                  
-                  Get a Free Quote
-                </a>
-                <a href="mailto:digitalsheakh@gmail.com" className="btn btn-primary">
-                  
-                  Email Us
-                </a>
-              </div>
-            </div>
-            
-            <div className="page-navigation">
-              <a className="nav-arrow" onClick={() => showPage('digital-marketing')}>← Digital Marketing</a>
-              <a className="nav-arrow" onClick={() => showPage('our-products')}>Our Products →</a>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              marginTop: '40px',
+              borderTop: '1px solid #eee',
+              paddingTop: '20px'
+            }}>
+              <a 
+                onClick={() => showPage('home')} 
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  color: '#2d667c',
+                  textDecoration: 'none',
+                  fontWeight: '500',
+                  fontSize: '15px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = '#235264'}
+                onMouseOut={(e) => e.currentTarget.style.color = '#2d667c'}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Home
+              </a>
+              <a 
+                onClick={() => showPage('contact')} 
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  color: '#2d667c',
+                  textDecoration: 'none',
+                  fontWeight: '500',
+                  fontSize: '15px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = '#235264'}
+                onMouseOut={(e) => e.currentTarget.style.color = '#2d667c'}
+              >
+                Contact
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
             </div>
           </div>
 
@@ -749,7 +1038,7 @@ export default function Home() {
                 <div className="form-group">
                   <label className="form-label">Which service(s) are you interested in?</label>
                   <div className="checkbox-group">
-                    {['Websites', 'Google Ads', 'Search Engine Optimisation', 'Email Marketing', 'Something else'].map((service) => (
+                    {['Business Development', 'Social Media Management', 'Website Development', 'Photo & Video Editing', 'Something else'].map((service) => (
                       <label key={service} className="checkbox-label">
                         <input
                           type="checkbox"
@@ -890,8 +1179,8 @@ export default function Home() {
                   onClick={() => {
                     setIsChatOpen(false);
                     setChatStep(0);
-                    setChatMessages([{ text: "Hi! What service are you interested in?", sender: 'bot' }]);
-                    setChatData({ name: '', email: '', service: '', message: '' });
+                    setChatMessages([{ text: "Hi! 👋 How can I help you today?", sender: 'bot' }]);
+                    setChatData({ name: '', email: '', phone: '', service: '', message: '' });
                   }}
                   style={{
                     background: 'none',
@@ -963,7 +1252,7 @@ export default function Home() {
               {/* Quick Reply Buttons */}
               {chatStep === 0 && !isTyping && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
-                  {['Website Development', 'App Development', 'Digital Marketing', 'SEO', 'Other'].map((service) => (
+                  {['Social Media Management', 'TripAdvisor Management', 'Customer Support', 'Website Development', 'Pricing Info', 'Get Started'].map((service) => (
                     <button
                       key={service}
                       onClick={() => {
@@ -972,7 +1261,8 @@ export default function Home() {
                         setChatData(prev => ({ ...prev, service }));
                         setTimeout(() => {
                           setIsTyping(false);
-                          setChatMessages(prev => [...prev, { text: `Great choice! What's your name?`, sender: 'bot' }]);
+                          // Always start collecting customer info after service selection
+                          setChatMessages(prev => [...prev, { text: "Great choice! 😊 What's your name?", sender: 'bot' }]);
                           setChatStep(1);
                         }, 600);
                       }}
@@ -1003,7 +1293,7 @@ export default function Home() {
             </div>
 
             {/* Chat Input */}
-            {chatStep < 4 && chatStep > 0 && (
+            {chatStep < 5 && chatStep > 0 && (
               <div style={{
                 padding: '12px 12px 12px 12px',
                 borderTop: '1px solid #e0e0e0',
@@ -1088,7 +1378,7 @@ export default function Home() {
             )}
             
             {/* Completion Message */}
-            {chatStep === 4 && (
+            {chatStep === 5 && (
               <div style={{
                 padding: '16px',
                 borderTop: '1px solid #e0e0e0',
@@ -1102,8 +1392,8 @@ export default function Home() {
                   onClick={() => {
                     setIsChatOpen(false);
                     setChatStep(0);
-                    setChatMessages([{ text: "Hi! What service are you interested in?", sender: 'bot' }]);
-                    setChatData({ name: '', email: '', service: '', message: '' });
+                    setChatMessages([{ text: "Hi! 👋 How can I help you today?", sender: 'bot' }]);
+                    setChatData({ name: '', email: '', phone: '', service: '', message: '' });
                   }}
                   style={{
                     padding: '8px 16px',
