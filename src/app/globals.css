@@ -201,13 +201,7 @@ body {
 
 @media (max-width: 480px) {
   .content {
-    padding: 1rem;
-    justify-content: flex-start;
-    padding-top: 2rem;
-  }
-
-  .logo-container {
-    margin-bottom: 2rem;
+    padding: 1rem 0.5rem;
   }
 
   .social-btn {
@@ -223,15 +217,10 @@ body {
 
   .main-title {
     font-size: clamp(1rem, 5vw, 1.5rem);
-    margin-bottom: 2rem;
   }
 
   .logo {
     width: 120px !important;
-  }
-
-  .tagline {
-    margin-bottom: 1.5rem;
   }
 }
 
