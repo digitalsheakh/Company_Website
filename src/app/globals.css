@@ -474,7 +474,7 @@ body {
   width: 100%;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.03);
-  padding: 1rem 0;
+  padding: 1.25rem 0;
   margin: 2rem 0;
   animation: fadeInUp 1s ease 0.9s both;
 }

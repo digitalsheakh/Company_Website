@@ -45,15 +45,6 @@ export default function Home() {
     scrollToBottom();
   }, [messages]);
 
-  const pricing = {
-    website_premium: { price: '750', period: 'per year', description: 'Website development including hosting and maintenance throughout the year' },
-    website_simple: { price: '110', period: 'per month', description: 'Regular simple website including hosting and all', original: '150' },
-    social_media: { price: '350', period: 'per month', description: 'Social media management', original: '450' },
-    content_social: { price: '550', period: 'per month', description: 'Content creation and social media management together', original: '700' },
-    app_dev: { price: '990', period: 'per month', description: 'App development', original: '1200' },
-    google_business: { price: '29', period: 'per month', description: 'Google Business Profile and TripAdvisor profile setup and management', original: '45' },
-    digital_pack: { price: '650', period: 'per month', description: 'Complete digital marketing pack (social media, content, website and business profiles management)', original: '1000', discount: '350' }
-  };
 
   const sendEmail = async (userData: { name: string; email: string; phone: string; interest: string }) => {
     try {
@@ -96,27 +87,13 @@ export default function Home() {
     if (step === 'interest') {
       setUserInterest(message);
       
-      let priceInfo = '';
-      if (lowerMessage.includes('website') && (lowerMessage.includes('premium') || lowerMessage.includes('full') || lowerMessage.includes('complete'))) {
-        priceInfo = `\n\nOur premium website development starts from £${pricing.website_premium.price} ${pricing.website_premium.period}, which includes hosting and maintenance throughout the year. For an accurate quote tailored to your needs, we'll need to discuss your specific requirements.`;
-      } else if (lowerMessage.includes('website') || lowerMessage.includes('site')) {
-        priceInfo = `\n\nOur regular website packages start from £${pricing.website_simple.price} ${pricing.website_simple.period} (discounted from £${pricing.website_simple.original}), including hosting and everything you need. For more complex websites, we have premium packages starting from £${pricing.website_premium.price} per year.`;
-      } else if (lowerMessage.includes('social') && lowerMessage.includes('content')) {
-        priceInfo = `\n\nOur combined content creation and social media management package is £${pricing.content_social.price} ${pricing.content_social.period} (discounted from £${pricing.content_social.original}). This gives you comprehensive coverage for your social presence.`;
-      } else if (lowerMessage.includes('social')) {
-        priceInfo = `\n\nSocial media management starts from £${pricing.social_media.price} ${pricing.social_media.period} (discounted from £${pricing.social_media.original}). If you want content creation included, we have a package for £${pricing.content_social.price} per month.`;
-      } else if (lowerMessage.includes('content')) {
-        priceInfo = `\n\nContent creation with social media management is £${pricing.content_social.price} ${pricing.content_social.period} (discounted from £${pricing.content_social.original}).`;
-      } else if (lowerMessage.includes('app')) {
-        priceInfo = `\n\nApp development starts from £${pricing.app_dev.price} ${pricing.app_dev.period} (discounted from £${pricing.app_dev.original}). The exact price depends on your app's features and complexity.`;
-      } else if (lowerMessage.includes('google') || lowerMessage.includes('business profile') || lowerMessage.includes('tripadvisor')) {
-        priceInfo = `\n\nGoogle Business Profile and TripAdvisor setup and management is just £${pricing.google_business.price} ${pricing.google_business.period} (discounted from £${pricing.google_business.original}).`;
-      } else if (lowerMessage.includes('everything') || lowerMessage.includes('complete') || lowerMessage.includes('full package') || lowerMessage.includes('digital marketing')) {
-        priceInfo = `\n\nOur complete digital marketing package includes social media, content creation, website, and business profile management for £${pricing.digital_pack.price} ${pricing.digital_pack.period}. That's a £${pricing.digital_pack.discount} discount from the regular £${pricing.digital_pack.original} price.`;
+      let serviceResponse = '';
+      if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('pricing') || lowerMessage.includes('how much')) {
+        serviceResponse = `\n\nFor personalized pricing tailored to your specific needs, please contact us directly. We offer competitive rates and customized packages to suit your business requirements.`;
       }
       
       setConversationStep('email');
-      return `That sounds great.${priceInfo}\n\nCould I get your email address so we can send you more detailed information?`;
+      return `That sounds great. We'd love to help you with ${message}.${serviceResponse}\n\nCould I get your email address so we can send you more detailed information?`;
     }
     
     if (step === 'email') {
