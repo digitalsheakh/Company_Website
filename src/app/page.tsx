@@ -135,11 +135,11 @@ export default function Home() {
         interest: userInterest
       });
       
-      return `Thank you, ${userName}. I've got all your details. Someone from our team will reach out to you shortly at ${userEmail} or ${message} to discuss your ${userInterest} needs in detail.\n\nIn the meantime, feel free to check out our Instagram or send us a direct message there if you have any questions.`;
+      return `Thank you, ${userName}. I've got all your details. Someone from our team will reach out to you shortly at ${userEmail} or ${message} to discuss your ${userInterest} needs in detail.\n\nFeel free to check out our Instagram or send us a direct message there. Have a great day!`;
     }
     
     if (step === 'complete') {
-      return `Is there anything else I can help you with? Otherwise, our team will be in touch with you soon.`;
+      return `Thank you for your interest. Our team will be in touch with you soon!`;
     }
     
     return "I'm here to help. What would you like to know about our services?";
