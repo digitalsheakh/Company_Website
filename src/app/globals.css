@@ -53,6 +53,7 @@ body {
   height: 100vh;
   padding: 2rem;
   text-align: center;
+  width: 100%;
 }
 
 .logo-container {
@@ -200,7 +201,13 @@ body {
 
 @media (max-width: 480px) {
   .content {
-    padding: 1rem 0.5rem;
+    padding: 1rem;
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+
+  .logo-container {
+    margin-bottom: 2rem;
   }
 
   .social-btn {
@@ -216,10 +223,15 @@ body {
 
   .main-title {
     font-size: clamp(1rem, 5vw, 1.5rem);
+    margin-bottom: 2rem;
   }
 
   .logo {
     width: 120px !important;
+  }
+
+  .tagline {
+    margin-bottom: 1.5rem;
   }
 }
 
@@ -481,8 +493,9 @@ body {
 .marquee-content {
   display: flex;
   gap: 3rem;
-  animation: scroll 30s linear infinite;
-  width: fit-content;
+  animation: scroll 20s linear infinite;
+  width: max-content;
+  padding-left: 100%;
 }
 
 .service-item {
@@ -506,7 +519,7 @@ body {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-100%);
   }
 }
 
@@ -609,9 +622,11 @@ body {
     width: calc(100vw - 2rem);
     max-width: 400px;
     right: 1rem;
+    left: 1rem;
     bottom: 4.5rem;
-    height: 65vh;
-    max-height: 500px;
+    height: 60vh;
+    max-height: 450px;
+    margin: 0 auto;
   }
 
   .chat-button {
@@ -634,6 +649,9 @@ body {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
 
   .message-bubble {
@@ -645,14 +663,17 @@ body {
 
   .chat-input-container {
     padding: 0.875rem;
-    position: sticky;
-    bottom: 0;
     background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
   }
 
   .chat-input {
     font-size: 16px;
     font-weight: 500;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0.75rem;
   }
 
   .chat-footer {
