@@ -3,8 +3,8 @@ import "./globals.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
-  title: "Digital Sheakh - IT solutions for Your Business",
-  description: "We offer comprehensive business development services including social media management, website development, and digital marketing.",
+  title: "Digital Sheakh - Digital Solution For Business Owners",
+  description: "Professional digital marketing, social media management, content creation, design, website development, and iOS app development services for business owners.",
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -17,35 +17,24 @@ export const metadata: Metadata = {
   },
   keywords: [
     "Digital Sheakh",
-    "Digital Sheakh Business Development",
-    "Business Development Services",
-    "Social Media Management",
-    "Website Development",
-    "Photo Editing Services",
-    "Video Editing Services",
     "Digital Marketing",
+    "Social Media Management",
+    "Content Creation",
+    "Design Services",
+    "Creative Work",
+    "Website Development",
+    "iOS App Development",
     "Sheakh Digital",
     "sheakh.digital",
-    "TripAdvisor Management",
-    "Google Business Profile Management",
-    "Facebook Management",
     "Instagram Management",
     "TikTok Management",
-    "Review Management",
-    "Business Growth Services",
-    "Digital Presence Management",
-    "Online Reputation Management",
-    "Social Media Marketing",
-    "Content Creation",
-    "Digital Branding",
-    "Business Promotion",
-    "Online Marketing",
-    "Digital Business Solutions",
-    "Professional Social Media",
-    "Business Social Media",
-    "Digital Growth Strategy",
-    "Online Business Development",
-    "Digital Business Management",
+    "Facebook Management",
+    "Digital Solution",
+    "Business Owners",
+    "Professional Design",
+    "App Development",
+    "Web Development",
+    "Digital Services",
   ].join(", "),
   authors: [{ name: "Digital Sheakh" }],
   creator: "Digital Sheakh",
@@ -107,9 +96,9 @@ export default function RootLayout({
     "alternateName": ["Sheakh Digital", "Digital Sheakh Website Development", "Digital Sheakh App Development"],
     "url": "https://sheakh.digital",
     "logo": "https://sheakh.digital/logo.png",
-    "description": "Digital Sheakh offers professional website development, app development, digital marketing by Digital Sheakh, SEO by Digital Sheakh, and software development with Digital Sheakh. Expert IT solutions for businesses worldwide.",
+    "description": "Digital Sheakh offers professional digital marketing, social media management, content creation, design and creative work, website development, and iOS app development. Expert digital solutions for business owners worldwide.",
     "email": "digitalsheakh@gmail.com",
-    "slogan": "IT solutions for Your Business",
+    "slogan": "Digital Solution For Business Owners",
     "foundingDate": "2020",
     "sameAs": [
       "https://www.instagram.com/digitalsheakh/",
@@ -134,29 +123,18 @@ export default function RootLayout({
     "offers": [
       {
         "@type": "Offer",
-        "name": "Business Development by Digital Sheakh",
-        "description": "Comprehensive business development services including social media management, website development, and digital marketing.",
-        "price": "299",
-        "priceCurrency": "GBP",
-        "priceSpecification": {
-          "@type": "UnitPriceSpecification",
-          "price": "299",
-          "priceCurrency": "GBP",
-          "unitText": "MONTH"
-        },
+        "name": "Digital Services by Digital Sheakh",
+        "description": "Professional digital marketing, social media management, content creation, design, website development, and iOS app development services.",
         "availability": "https://schema.org/InStock"
       }
     ],
     "serviceType": [
-      "Business Development",
+      "Digital Marketing",
       "Social Media Management",
+      "Content Creation",
+      "Design and Creative Work",
       "Website Development",
-      "Photo Editing",
-      "Video Editing",
-      "TripAdvisor Management",
-      "Google Business Profile Management",
-      "Review Management",
-      "Content Creation"
+      "iOS App Development"
     ],
     "areaServed": {
       "@type": "GeoCircle",
@@ -207,8 +185,8 @@ export default function RootLayout({
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Business Development",
-                "item": "https://sheakh.digital/#business-development"
+                "name": "Services",
+                "item": "https://sheakh.digital/#services"
               }
             ]
           }) }}
