@@ -7,6 +7,8 @@ import emailjs from '@emailjs/browser';
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isChatMinimized, setIsChatMinimized] = useState(false);
+  const [showChatPrompt, setShowChatPrompt] = useState(true);
+  const chatInputRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState([
     { text: "Hi there! I'm Sheakh. What's your name?", sender: 'bot' }
   ]);
@@ -19,7 +21,20 @@ export default function Home() {
 
   useEffect(() => {
     emailjs.init('_5VLmkhbpDyqVK5Qn');
+    
+    // Show chat prompt after 3 seconds
+    const timer = setTimeout(() => {
+      setShowChatPrompt(true);
+    }, 3000);
+    
+    return () => clearTimeout(timer);
   }, []);
+  
+  useEffect(() => {
+    if (isChatOpen) {
+      setShowChatPrompt(false);
+    }
+  }, [isChatOpen]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -210,8 +225,72 @@ export default function Home() {
         </div>
 
         <p className="tagline">digitalsheakh@gmail.com</p>
+        
+        {/* Services Marquee */}
+        <div className="services-marquee">
+          <div className="marquee-content">
+            <div className="service-item">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/>
+              </svg>
+              <span>Website Development</span>
+            </div>
+            <div className="service-item">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
+              </svg>
+              <span>Social Media Management</span>
+            </div>
+            <div className="service-item">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+              </svg>
+              <span>Content Creation</span>
+            </div>
+            <div className="service-item">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+              </svg>
+              <span>App Development</span>
+            </div>
+            <div className="service-item">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              <span>Google Business Profile</span>
+            </div>
+            <div className="service-item">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/>
+              </svg>
+              <span>Website Development</span>
+            </div>
+            <div className="service-item">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
+              </svg>
+              <span>Social Media Management</span>
+            </div>
+          </div>
+        </div>
       </div>
 
+      {/* Chat Prompt */}
+      {showChatPrompt && !isChatOpen && (
+        <div className="chat-prompt">
+          <div className="chat-prompt-content">
+            <p>Hi! Need help with your digital needs?</p>
+            <button onClick={() => setIsChatOpen(true)}>Chat with Sheakh</button>
+          </div>
+          <button className="close-prompt" onClick={() => setShowChatPrompt(false)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      )}
+      
       {/* Chat Button */}
       <button 
         className="chat-button"
@@ -280,12 +359,14 @@ export default function Home() {
           
           <div className="chat-input-container">
             <input 
+              ref={chatInputRef}
               type="text"
               className="chat-input"
               placeholder="Type your message..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
+              autoComplete="off"
             />
             <button className="send-button" onClick={handleSendMessage}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -4,83 +4,10 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "Digital Sheakh - Digital Solution For Business Owners",
-  description: "Professional digital marketing, social media management, content creation, design, website development, and iOS app development services for business owners.",
+  description: "Professional digital marketing, social media management, content creation, website development, and app development services.",
   icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
-  keywords: [
-    "Digital Sheakh",
-    "Digital Marketing",
-    "Social Media Management",
-    "Content Creation",
-    "Design Services",
-    "Creative Work",
-    "Website Development",
-    "iOS App Development",
-    "Sheakh Digital",
-    "sheakh.digital",
-    "Instagram Management",
-    "TikTok Management",
-    "Facebook Management",
-    "Digital Solution",
-    "Business Owners",
-    "Professional Design",
-    "App Development",
-    "Web Development",
-    "Digital Services",
-  ].join(", "),
-  authors: [{ name: "Digital Sheakh" }],
-  creator: "Digital Sheakh",
-  publisher: "Digital Sheakh",
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://sheakh.digital",
-    siteName: "Digital Sheakh",
-    title: "Digital Sheakh - IT solutions for Your Business",
-    description: "We offer comprehensive business development services including social media management, website development, and digital marketing.",
-    images: [
-      {
-        url: "https://sheakh.digital/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Digital Sheakh - Website Development, App Development & Digital Marketing Services",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Digital Sheakh - IT solutions for Your Business",
-    description: "We offer comprehensive business development services including social media management, website development, and digital marketing.",
-    images: ["https://sheakh.digital/twitter-image.jpg"],
-    creator: "@digitalsheakh",
-  },
-  alternates: {
-    canonical: "https://sheakh.digital",
-  },
-  category: "Technology",
-  classification: "Business Services",
-  other: {
-    "contact:email": "digitalsheakh@gmail.com",
-    "contact:phone_number": "+880-123-456-7890",
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
   },
 };
 
@@ -152,15 +79,9 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="theme-color" content="#2d667c" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="format-detection" content="telephone=no" />
-        
-        
-        {/* Additional SEO Tags */}
-        <meta name="revisit-after" content="7 days" />
-        <meta name="distribution" content="global" />
-        <meta name="rating" content="general" />
-        <meta name="referrer" content="no-referrer-when-downgrade" />
         
         {/* Structured Data */}
         <script
