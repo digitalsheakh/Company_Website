@@ -146,20 +146,6 @@ export default function Home() {
 
   return (
     <div className="video-container">
-      {/* Video Background - User will add their video */}
-      <video 
-        className="background-video"
-        autoPlay 
-        loop 
-        muted 
-        playsInline
-      >
-        <source src="/video/background.mov" type="video/mp4" />
-      </video>
-
-      {/* Overlay */}
-      <div className="overlay"></div>
-
       {/* Content */}
       <div className="content">
         <div className="logo-container">
