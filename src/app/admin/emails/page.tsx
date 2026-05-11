@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import Navigation from '@/components/Navigation';
 import Link from 'next/link';
 
@@ -28,18 +26,11 @@ export default function AdminEmailsPage() {
 
   const fetchEmails = async () => {
     try {
-      const q = query(collection(db, 'contact_submissions'), orderBy('timestamp', 'desc'));
-      const querySnapshot = await getDocs(q);
-      const emailsData: EmailData[] = [];
-      
-      querySnapshot.forEach((doc) => {
-        emailsData.push({
-          id: doc.id,
-          ...doc.data()
-        } as EmailData);
-      });
-      
-      setEmails(emailsData);
+      const response = await fetch('/api/admin/emails');
+      if (response.ok) {
+        const data = await response.json();
+        setEmails(data.emails || []);
+      }
     } catch (error) {
       console.error('Error fetching emails:', error);
     } finally {
@@ -50,8 +41,13 @@ export default function AdminEmailsPage() {
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this email?')) {
       try {
-        await deleteDoc(doc(db, 'contact_submissions', id));
-        setEmails(emails.filter(email => email.id !== id));
+        const response = await fetch(`/api/admin/emails/${id}`, {
+          method: 'DELETE',
+        });
+        
+        if (response.ok) {
+          setEmails(emails.filter(email => email.id !== id));
+        }
       } catch (error) {
         console.error('Error deleting email:', error);
       }
