@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import Navigation from '@/components/Navigation';
 import GetInTouch from '@/components/GetInTouch';
 
@@ -52,7 +54,7 @@ export default function Home() {
   }, [messages]);
 
 
-  const sendEmail = async (userData: { name: string; email: string; phone: string; interest: string }) => {
+  const sendUserData = async (userData: any) => {
     try {
       const now = new Date();
       const timeString = now.toLocaleString('en-GB', { 
@@ -64,6 +66,17 @@ export default function Home() {
         hour12: true 
       });
       
+      // Save to Firestore
+      await addDoc(collection(db, 'contact_submissions'), {
+        name: userData.name,
+        email: userData.email,
+        phone: userData.phone,
+        message: `Interest: ${userData.interest}\nTime: ${timeString}`,
+        source: 'Live Chat',
+        timestamp: new Date()
+      });
+      
+      // Send email
       await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -113,7 +126,7 @@ export default function Home() {
     if (step === 'phone') {
       setConversationStep('complete');
       
-      sendEmail({
+      sendUserData({
         name: userName,
         email: userEmail,
         phone: message,

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function GetInTouch() {
   const [formData, setFormData] = useState({
@@ -9,14 +11,24 @@ export default function GetInTouch() {
     phone: '',
     message: ''
   });
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus('sending');
+    setStatus('loading');
+    setErrorMessage('');
 
     try {
-      const response = await fetch('/api/contact', {
+      // Save to Firestore
+      await addDoc(collection(db, 'contact_submissions'), {
+        ...formData,
+        source: 'Get In Touch Form',
+        timestamp: new Date()
+      });
+
+      // Send email via API
+      await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,17 +39,12 @@ export default function GetInTouch() {
         }),
       });
 
-      if (response.ok) {
-        setStatus('success');
-        setFormData({ name: '', email: '', phone: '', message: '' });
-        setTimeout(() => setStatus('idle'), 3000);
-      } else {
-        setStatus('error');
-        setTimeout(() => setStatus('idle'), 3000);
-      }
+      setStatus('success');
+      setFormData({ name: '', email: '', phone: '', message: '' });
+      setTimeout(() => setStatus('idle'), 5000);
     } catch (error) {
       setStatus('error');
-      setTimeout(() => setStatus('idle'), 3000);
+      setErrorMessage('An error occurred. Please try again.');
     }
   };
 
@@ -94,9 +101,9 @@ export default function GetInTouch() {
           <button 
             type="submit" 
             className="submit-button"
-            disabled={status === 'sending'}
+            disabled={status === 'loading'}
           >
-            {status === 'sending' ? 'Sending...' : 'Send Message'}
+            {status === 'loading' ? 'Sending...' : 'Send Message'}
           </button>
         </form>
 
