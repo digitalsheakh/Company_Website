@@ -3,7 +3,9 @@ import { Resend } from 'resend';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend with fallback
+const resendApiKey = process.env.RESEND_API_KEY || 're_placeholder';
+const resend = new Resend(resendApiKey);
 
 // Initialize Firebase Admin
 if (!getApps().length) {
@@ -33,7 +35,12 @@ export async function POST(request: Request) {
       timestamp: new Date(),
     });
 
-    // Send email via Resend
+    // Send email via Resend only if API key is valid
+    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 're_placeholder') {
+      console.warn('Resend API key not configured, skipping email');
+      return NextResponse.json({ success: true, message: 'Saved to database' });
+    }
+
     const { data, error } = await resend.emails.send({
       from: 'Digital Sheakh <onboarding@resend.dev>',
       to: ['digitalsheakh@gmail.com'],
