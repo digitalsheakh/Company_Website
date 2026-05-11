@@ -524,7 +524,8 @@ body {
 }
 
 .whatsapp-btn,
-.instagram-btn {
+.instagram-btn,
+.email-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
@@ -561,6 +562,18 @@ body {
 .instagram-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(188, 24, 136, 0.3);
+}
+
+.email-btn {
+  background: #EA4335;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2);
+}
+
+.email-btn:hover {
+  background: #d33426;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(234, 67, 53, 0.3);
 }
 
 /* Responsive Design */

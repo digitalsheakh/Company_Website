@@ -148,6 +148,7 @@ export default function Home() {
     <div className="video-container">
       {/* Content */}
       <div className="content">
+        <div className="hero-section">
         <div className="logo-container">
           <Image 
             src="/sheakhlogo.png" 
@@ -245,10 +246,142 @@ export default function Home() {
             </svg>
             Instagram
           </a>
-        </div>
 
-        <p className="tagline">digitalsheakh@gmail.com</p>
+          <a 
+            href="mailto:digitalsheakh@gmail.com" 
+            className="social-btn email-btn"
+          >
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            Email
+          </a>
+        </div>
+        </div>
       </div>
+
+      {/* Portfolio Section */}
+      <section className="portfolio-section">
+        <div className="container">
+          <h2 className="section-title">Our Expertise</h2>
+          <p className="section-subtitle">Specialized Digital Solutions for Your Industry</p>
+          
+          <div className="portfolio-grid">
+            <a href="/catering" className="portfolio-card">
+              <div className="portfolio-image">
+                <Image 
+                  src="/images/catering.png" 
+                  alt="Catering Business Website Development" 
+                  width={400} 
+                  height={300}
+                  className="card-img"
+                />
+              </div>
+              <div className="portfolio-content">
+                <h3>Catering Business</h3>
+                <p>Custom websites for catering services with online ordering and menu management</p>
+              </div>
+            </a>
+
+            <a href="/garage" className="portfolio-card">
+              <div className="portfolio-image">
+                <Image 
+                  src="/images/garage.png" 
+                  alt="Garage & Auto Repair Website Development" 
+                  width={400} 
+                  height={300}
+                  className="card-img"
+                />
+              </div>
+              <div className="portfolio-content">
+                <h3>Garage & Auto Repair</h3>
+                <p>Professional websites for auto repair shops with booking systems</p>
+              </div>
+            </a>
+
+            <a href="/ecommerce" className="portfolio-card">
+              <div className="portfolio-image">
+                <Image 
+                  src="/images/ecommerce.png" 
+                  alt="E-commerce Website Development" 
+                  width={400} 
+                  height={300}
+                  className="card-img"
+                />
+              </div>
+              <div className="portfolio-content">
+                <h3>E-commerce</h3>
+                <p>Full-featured online stores with payment integration and inventory management</p>
+              </div>
+            </a>
+
+            <a href="/laundry" className="portfolio-card">
+              <div className="portfolio-image">
+                <Image 
+                  src="/images/laundry.png" 
+                  alt="Laundry Company Website Development" 
+                  width={400} 
+                  height={300}
+                  className="card-img"
+                />
+              </div>
+              <div className="portfolio-content">
+                <h3>Laundry Company</h3>
+                <p>Modern websites for laundry services with pickup scheduling and pricing</p>
+              </div>
+            </a>
+
+            <a href="/hotels" className="portfolio-card">
+              <div className="portfolio-image">
+                <Image 
+                  src="/images/hotels.png" 
+                  alt="Hotel & Hospitality Website Development" 
+                  width={400} 
+                  height={300}
+                  className="card-img"
+                />
+              </div>
+              <div className="portfolio-content">
+                <h3>Hotels & Hospitality</h3>
+                <p>Elegant hotel websites with booking engines and room management</p>
+              </div>
+            </a>
+
+            <a href="/pharmacy" className="portfolio-card">
+              <div className="portfolio-image">
+                <Image 
+                  src="/images/pharmacy.png" 
+                  alt="Pharmacy Website Development" 
+                  width={400} 
+                  height={300}
+                  className="card-img"
+                />
+              </div>
+              <div className="portfolio-content">
+                <h3>Pharmacy</h3>
+                <p>Secure pharmacy websites with prescription management and delivery</p>
+              </div>
+            </a>
+
+            <a href="/taxi" className="portfolio-card">
+              <div className="portfolio-image">
+                <Image 
+                  src="/images/taxi.png" 
+                  alt="Taxi Company Website Development" 
+                  width={400} 
+                  height={300}
+                  className="card-img"
+                />
+              </div>
+              <div className="portfolio-content">
+                <h3>Taxi Company</h3>
+                <p>Advanced taxi service websites with real-time booking and tracking</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
 
       {/* Chat Prompt */}
       {showChatPrompt && !isChatOpen && (
