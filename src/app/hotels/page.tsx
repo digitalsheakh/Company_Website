@@ -1,21 +1,16 @@
-import { Metadata } from 'next';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import Navigation from '@/components/Navigation';
+import GetInTouch from '@/components/GetInTouch';
 
-export const metadata: Metadata = {
-  title: 'Hotel & Hospitality Website Development | Digital Sheakh',
-  description: 'Professional hotel website development services. Custom websites for hotels and hospitality businesses with booking engines, room management, and reservation systems. Elevate your hotel online presence.',
-  keywords: 'hotel website, hospitality website, hotel booking system, resort website, hotel web design, accommodation website, hotel reservation system',
-  openGraph: {
-    title: 'Professional Hotel & Hospitality Website Development',
-    description: 'Transform your hotel business with an elegant website featuring integrated booking engines, room management, and guest services.',
-    type: 'website',
-  },
-};
 
 export default function HotelsPage() {
   return (
-    <main className="service-page">
+    <>
+      <Navigation />
+      <main className="service-page">
       <div className="service-hero">
         <div className="container">
           <Link href="/" className="back-link">
@@ -151,6 +146,9 @@ export default function HotelsPage() {
           </div>
         </div>
       </section>
-    </main>
+
+      <GetInTouch />
+      </main>
+    </>
   );
 }

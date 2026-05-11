@@ -1,21 +1,16 @@
-import { Metadata } from 'next';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import Navigation from '@/components/Navigation';
+import GetInTouch from '@/components/GetInTouch';
 
-export const metadata: Metadata = {
-  title: 'Taxi Company Website Development | Digital Sheakh',
-  description: 'Professional taxi and ride-sharing website development. Custom websites for taxi companies with real-time booking, GPS tracking, fare calculation, and driver management. Modernize your taxi business.',
-  keywords: 'taxi website, cab service website, ride booking system, taxi web design, transportation website, taxi booking app, fleet management',
-  openGraph: {
-    title: 'Professional Taxi Company Website Development',
-    description: 'Transform your taxi business with a modern website featuring real-time booking, GPS tracking, and automated dispatch systems.',
-    type: 'website',
-  },
-};
 
 export default function TaxiPage() {
   return (
-    <main className="service-page">
+    <>
+      <Navigation />
+      <main className="service-page">
       <div className="service-hero">
         <div className="container">
           <Link href="/" className="back-link">
@@ -169,6 +164,9 @@ export default function TaxiPage() {
           </div>
         </div>
       </section>
-    </main>
+
+      <GetInTouch />
+      </main>
+    </>
   );
 }

@@ -1,21 +1,15 @@
-import { Metadata } from 'next';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'Catering Business Website Development | Digital Sheakh',
-  description: 'Expert catering website development services. Custom websites for catering businesses with online ordering, menu management, event booking, and payment integration. Boost your catering business online.',
-  keywords: 'catering website, catering business website, online food ordering, menu management, event catering website, catering web design, restaurant website',
-  openGraph: {
-    title: 'Professional Catering Website Development Services',
-    description: 'Transform your catering business with a custom website featuring online ordering, menu management, and event booking systems.',
-    type: 'website',
-  },
-};
+import Navigation from '@/components/Navigation';
+import GetInTouch from '@/components/GetInTouch';
 
 export default function CateringPage() {
   return (
-    <main className="service-page">
+    <>
+      <Navigation />
+      <main className="service-page">
       <div className="service-hero">
         <div className="container">
           <Link href="/" className="back-link">
@@ -181,6 +175,9 @@ export default function CateringPage() {
           </div>
         </div>
       </section>
-    </main>
+
+      <GetInTouch />
+      </main>
+    </>
   );
 }

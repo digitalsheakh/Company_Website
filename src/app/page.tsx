@@ -2,7 +2,8 @@
 
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
-import emailjs from '@emailjs/browser';
+import Navigation from '@/components/Navigation';
+import GetInTouch from '@/components/GetInTouch';
 
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -20,14 +21,19 @@ export default function Home() {
   const [conversationStep, setConversationStep] = useState('name');
 
   useEffect(() => {
-    emailjs.init('_5VLmkhbpDyqVK5Qn');
-    
     // Show chat prompt after 3 seconds
-    const timer = setTimeout(() => {
+    const showTimer = setTimeout(() => {
       setShowChatPrompt(true);
+      
+      // Hide after 3 more seconds
+      const hideTimer = setTimeout(() => {
+        setShowChatPrompt(false);
+      }, 3000);
+      
+      return () => clearTimeout(hideTimer);
     }, 3000);
     
-    return () => clearTimeout(timer);
+    return () => clearTimeout(showTimer);
   }, []);
   
   useEffect(() => {
@@ -58,17 +64,19 @@ export default function Home() {
         hour12: true 
       });
       
-      await emailjs.send(
-        'service_rt76vlk',
-        'template_xkh8zhg',
-        {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           name: userData.name,
-          time: timeString,
           email: userData.email,
           phone: userData.phone,
-          interest: userData.interest
-        }
-      );
+          message: `Interest: ${userData.interest}\nTime: ${timeString}`,
+          source: 'Live Chat'
+        }),
+      });
     } catch (error) {
       console.error('Email send failed:', error);
     }
@@ -145,25 +153,16 @@ export default function Home() {
   };
 
   return (
-    <div className="video-container">
-      {/* Content */}
-      <div className="content">
+    <>
+      <Navigation />
+      <div className="video-container">
+        {/* Content */}
+        <div className="content">
         <div className="hero-section">
-        <div className="logo-container">
-          <Image 
-            src="/sheakhlogo.png" 
-            alt="Digital Sheakh" 
-            width={180} 
-            height={60}
-            priority
-            className="logo"
-          />
-        </div>
-
         <h1 className="main-title">Digital Solution For Business Owners</h1>
 
         {/* Services Marquee */}
-        <div className="services-marquee">
+        <div className="services-marquee" id="services-section">
           <div className="marquee-content">
             <div className="service-item">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -258,6 +257,10 @@ export default function Home() {
             Email
           </a>
         </div>
+
+        <a href="/pricing" className="pricing-cta-btn">
+          View Pricing & Plans
+        </a>
         </div>
       </div>
 
@@ -503,6 +506,9 @@ export default function Home() {
           )}
         </div>
       )}
-    </div>
+      </div>
+      
+      <GetInTouch />
+    </>
   );
 }

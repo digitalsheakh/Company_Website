@@ -1,21 +1,16 @@
-import { Metadata } from 'next';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import Navigation from '@/components/Navigation';
+import GetInTouch from '@/components/GetInTouch';
 
-export const metadata: Metadata = {
-  title: 'Laundry Company Website Development | Digital Sheakh',
-  description: 'Professional laundry service website development. Custom websites for laundry businesses with online booking, pickup scheduling, pricing calculators, and payment systems. Modernize your laundry business.',
-  keywords: 'laundry website, laundry service website, dry cleaning website, laundry booking system, laundry web design, online laundry service',
-  openGraph: {
-    title: 'Professional Laundry Company Website Development',
-    description: 'Transform your laundry business with a modern website featuring online booking, pickup scheduling, and automated payment systems.',
-    type: 'website',
-  },
-};
 
 export default function LaundryPage() {
   return (
-    <main className="service-page">
+    <>
+      <Navigation />
+      <main className="service-page">
       <div className="service-hero">
         <div className="container">
           <Link href="/" className="back-link">
@@ -151,6 +146,9 @@ export default function LaundryPage() {
           </div>
         </div>
       </section>
-    </main>
+
+      <GetInTouch />
+      </main>
+    </>
   );
 }

@@ -1,21 +1,15 @@
-import { Metadata } from 'next';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'Garage & Auto Repair Website Development | Digital Sheakh',
-  description: 'Professional garage and auto repair website development. Custom websites for auto repair shops with online booking, service scheduling, and customer management. Grow your garage business online.',
-  keywords: 'garage website, auto repair website, mechanic website, car service website, auto shop web design, garage booking system, automotive website',
-  openGraph: {
-    title: 'Professional Garage & Auto Repair Website Development',
-    description: 'Transform your auto repair business with a custom website featuring online booking, service scheduling, and customer management systems.',
-    type: 'website',
-  },
-};
+import Navigation from '@/components/Navigation';
+import GetInTouch from '@/components/GetInTouch';
 
 export default function GaragePage() {
   return (
-    <main className="service-page">
+    <>
+      <Navigation />
+      <main className="service-page">
       <div className="service-hero">
         <div className="container">
           <Link href="/" className="back-link">
@@ -141,6 +135,9 @@ export default function GaragePage() {
           </div>
         </div>
       </section>
-    </main>
+
+      <GetInTouch />
+      </main>
+    </>
   );
 }

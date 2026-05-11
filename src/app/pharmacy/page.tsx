@@ -1,21 +1,16 @@
-import { Metadata } from 'next';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import Navigation from '@/components/Navigation';
+import GetInTouch from '@/components/GetInTouch';
 
-export const metadata: Metadata = {
-  title: 'Pharmacy Website Development | Digital Sheakh',
-  description: 'Professional pharmacy website development services. Custom websites for pharmacies with prescription management, online ordering, delivery tracking, and secure patient portals. Modernize your pharmacy business.',
-  keywords: 'pharmacy website, drugstore website, pharmacy web design, online pharmacy, prescription management, pharmacy booking system, medical website',
-  openGraph: {
-    title: 'Professional Pharmacy Website Development Services',
-    description: 'Transform your pharmacy with a secure website featuring prescription management, online ordering, and delivery services.',
-    type: 'website',
-  },
-};
 
 export default function PharmacyPage() {
   return (
-    <main className="service-page">
+    <>
+      <Navigation />
+      <main className="service-page">
       <div className="service-hero">
         <div className="container">
           <Link href="/" className="back-link">
@@ -162,6 +157,9 @@ export default function PharmacyPage() {
           </div>
         </div>
       </section>
-    </main>
+
+      <GetInTouch />
+      </main>
+    </>
   );
 }

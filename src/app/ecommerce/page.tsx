@@ -1,21 +1,15 @@
-import { Metadata } from 'next';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'E-commerce Website Development | Digital Sheakh',
-  description: 'Professional e-commerce website development services. Custom online stores with payment integration, inventory management, and shopping cart systems. Build your online store with Digital Sheakh.',
-  keywords: 'ecommerce website, online store development, shopping cart website, ecommerce web design, online shop, payment integration, inventory management',
-  openGraph: {
-    title: 'Professional E-commerce Website Development Services',
-    description: 'Launch your online store with a custom e-commerce website featuring secure payments, inventory management, and powerful selling tools.',
-    type: 'website',
-  },
-};
+import Navigation from '@/components/Navigation';
+import GetInTouch from '@/components/GetInTouch';
 
 export default function EcommercePage() {
   return (
-    <main className="service-page">
+    <>
+      <Navigation />
+      <main className="service-page">
       <div className="service-hero">
         <div className="container">
           <Link href="/" className="back-link">
@@ -151,6 +145,9 @@ export default function EcommercePage() {
           </div>
         </div>
       </section>
-    </main>
+
+      <GetInTouch />
+      </main>
+    </>
   );
 }
